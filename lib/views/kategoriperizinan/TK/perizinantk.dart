@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:urbanscholaria_app/controllers/kategoriperizinan/TK/perizinantk_c.dart';
+import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
 import 'package:urbanscholaria_app/widgets/kategori_perizinan.dart';
 
 class TKPerizinanView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
-import 'package:urbanscholaria_app/controllers/kategoriperizinan/TK/perizinantk_c.dart';
+import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
 import 'package:urbanscholaria_app/widgets/jenis_perizinan_card.dart';
 
 class PerizinanView extends StatelessWidget {
@@ -19,6 +19,8 @@ class PerizinanView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final category = Get.parameters['category']; // Get the dynamic parameter
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbrand500,

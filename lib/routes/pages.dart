@@ -4,6 +4,7 @@ import 'package:urbanscholaria_app/views/beranda.dart';
 import 'package:urbanscholaria_app/views/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/chat.dart';
 import 'package:urbanscholaria_app/views/daftar.dart';
+import 'package:urbanscholaria_app/views/detailjenisperizinan.dart';
 import 'package:urbanscholaria_app/views/kategoriperizinan/SD/perizinansd.dart';
 import 'package:urbanscholaria_app/views/kategoriperizinan/SMA/perizinansma.dart';
 import 'package:urbanscholaria_app/views/kategoriperizinan/SMP/perizinansmp.dart';
@@ -110,6 +111,11 @@ class AppPage {
     GetPage(
       name: RouteNames.perizinansma,
       page: () => SMAPerizinanView(),
+    ),
+    //detailjenisperizinan
+    GetPage(
+      name: RouteNames.detailjenisperizinan,
+      page: () => DetailJenisPerizinanView(),
     ),
   ];
 }

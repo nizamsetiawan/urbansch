@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/base_api.dart';
 import 'package:urbanscholaria_app/models/kategori_m.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
 
 class TKPerizinanController extends GetxController {
   var permitstk = <TKCardPerizinan>[].obs;
@@ -77,8 +78,27 @@ class TKPerizinanController extends GetxController {
     print('Selected Category: $selectedCategory');
   }
 
-  void navigateToDetail(JenisSurat jenisSurat) {
+  void navigateToDetail(JenisSurat jenisSurat) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('selected_jenis_surat_id', jenisSurat.id);
+
+    // Print selected jenis surat ID for verification
+    print('Selected Jenis Surat ID: ${jenisSurat.id}');
+
     // Tambahkan navigasi sesuai kebutuhan Anda
-    // Get.toNamed(RouteNames.detailPage, arguments: jenisSurat);
+    Get.toNamed(RouteNames.detailjenisperizinan, arguments: jenisSurat);
+  }
+
+  Future<Map<String, dynamic>> getDetailJenisPerizinan(int jenisSuratId) async {
+    final url = Uri.parse(BASE_API + "api/surat-jenis/$jenisSuratId");
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print('Detail Jenis Perizinan: $data');
+      return data['data'];
+    } else {
+      throw Exception('Gagal memuat data detail jenis perizinan');
+    }
   }
 }

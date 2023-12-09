@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
-import 'package:urbanscholaria_app/controllers/editprofile_c.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 
 import 'package:urbanscholaria_app/widgets/aktivitas_card_beranda.dart';
 import 'package:urbanscholaria_app/widgets/kategori_card_beranda.dart';
