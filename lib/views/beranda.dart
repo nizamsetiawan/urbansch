@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
+import 'package:urbanscholaria_app/controllers/profile_c.dart';
 
 import 'package:urbanscholaria_app/widgets/aktivitas_card_beranda.dart';
 import 'package:urbanscholaria_app/widgets/kategori_card_beranda.dart';
 
 class BerandaView extends StatelessWidget {
   final BerandaController controller = Get.put(BerandaController());
+  final EditProfileController editProfileController =
+      Get.put(EditProfileController());
   BerandaView({Key? key}) : super(key: key);
 
   @override
@@ -195,10 +198,10 @@ class BerandaView extends StatelessWidget {
                           )),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 30, left: 36),
                     child: Text(
-                      "Hai Nizam!",
+                      "Hai ${editProfileController.pekerjaanController.text}!",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
