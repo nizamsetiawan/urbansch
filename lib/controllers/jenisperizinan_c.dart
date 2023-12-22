@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/base_api.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/models/kategori_m.dart';
 import 'package:urbanscholaria_app/routes/routes.dart';
 
 class TKPerizinanController extends GetxController {
+  RxList<Map<String, dynamic>> suratSyarats = <Map<String, dynamic>>[].obs;
   var permitstk = <TKCardPerizinan>[].obs;
 
   @override
@@ -24,15 +26,13 @@ class TKPerizinanController extends GetxController {
       return;
     }
 
-    // Print token for verification
-    print('Access Token: $token');
+    // Access BerandaController to get selected_category
+    BerandaController berandaController = Get.find();
 
-    String? selectedCategory = prefs.getString('selected_category');
+    // Wait for BerandaController to be initialized
+    await Future.delayed(Duration(milliseconds: 100));
 
-    if (selectedCategory == null) {
-      // Handle the case where no category is selected
-      return;
-    }
+    String? selectedCategory = berandaController.selectedCategory.value;
 
     // Print selected category for verification
     print('Selected Category: $selectedCategory');
@@ -53,7 +53,7 @@ class TKPerizinanController extends GetxController {
       permitstk.assignAll(jenisSuratList.map((jenisSurat) {
         return TKCardPerizinan(
           title: jenisSurat.nama,
-          requirements: '13 Syarat Dokumen',
+          requirements: '14 Syarat Dokumen',
           processingTime: '30 Hari Kerja',
           bannerimage: 'assets/images/perizinanbanner.png',
           onTap: () {
@@ -70,14 +70,6 @@ class TKPerizinanController extends GetxController {
     print('Permits Length: ${permitstk.length}');
   }
 
-  void handleDropdownClick(String selectedCategory) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('selected_category', selectedCategory);
-
-    // Print selected category for verification
-    print('Selected Category: $selectedCategory');
-  }
-
   void navigateToDetail(JenisSurat jenisSurat) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('selected_jenis_surat_id', jenisSurat.id);
@@ -90,12 +82,14 @@ class TKPerizinanController extends GetxController {
   }
 
   Future<Map<String, dynamic>> getDetailJenisPerizinan(int jenisSuratId) async {
-    final url = Uri.parse(BASE_API + "api/surat-jenis/$jenisSuratId");
-    final response = await http.get(url);
+    final response =
+        await http.get(Uri.parse(BASE_API + "api/surat-jenis/$jenisSuratId"));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print('Detail Jenis Perizinan: $data');
+      suratSyarats.value =
+          List<Map<String, dynamic>>.from(data['data']['surat_syarats']);
+      print(data);
       return data['data'];
     } else {
       throw Exception('Gagal memuat data detail jenis perizinan');

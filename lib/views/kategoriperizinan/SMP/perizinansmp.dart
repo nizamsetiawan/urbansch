@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart'; // Import BerandaController
 import 'package:urbanscholaria_app/widgets/kategori_perizinan.dart';
 
 class SMPPerizinanView extends StatelessWidget {
@@ -26,7 +27,9 @@ class SMPPerizinanView extends StatelessWidget {
 
   Future<String> getCategory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('selected_category') ?? 'SMP';
+    // Mengambil kategori dari BerandaController
+    BerandaController berandaController = Get.find();
+    return berandaController.getSelectedCategory;
   }
 
   String getTitleFromCategory(String category) {

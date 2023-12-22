@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart'; // Import BerandaController
 import 'package:urbanscholaria_app/widgets/kategori_perizinan.dart';
 
 class SMAPerizinanView extends StatelessWidget {
-  final TKPerizinanController smaPerizinanController =
+  final TKPerizinanController smpPerizinanController =
       Get.put(TKPerizinanController());
 
   @override
@@ -18,7 +19,7 @@ class SMAPerizinanView extends StatelessWidget {
         return PerizinanView(
           title: title,
           backgroundImage: 'assets/icons/perizinansma.png',
-          permits: smaPerizinanController.permitstk,
+          permits: smpPerizinanController.permitstk,
         );
       },
     );
@@ -26,7 +27,9 @@ class SMAPerizinanView extends StatelessWidget {
 
   Future<String> getCategory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('selected_category') ?? 'SMA';
+    // Mengambil kategori dari BerandaController
+    BerandaController berandaController = Get.find();
+    return berandaController.getSelectedCategory;
   }
 
   String getTitleFromCategory(String category) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/controllers/detailjenisperizinan_c.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
 
@@ -21,6 +22,8 @@ class DetailJenisPerizinanView extends StatelessWidget {
           Map<String, dynamic> detailJenisPerizinan = snapshot.data!;
           DetailJenisPerizinanController controller =
               Get.put(DetailJenisPerizinanController()); // Get the controller
+          TKPerizinanController tkcontroller = Get.put(TKPerizinanController());
+          BerandaController berandaController = Get.find(); // Tambahkan ini
 
           return Scaffold(
             appBar: AppBar(
@@ -49,7 +52,7 @@ class DetailJenisPerizinanView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                detailJenisPerizinan['nama'],
+                                '${detailJenisPerizinan['nama']} ${berandaController.getSelectedCategory}',
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -137,6 +140,210 @@ class DetailJenisPerizinanView extends StatelessWidget {
                         color: appneutral500,
                       ),
                     ),
+                    SizedBox(height: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Show an expanded image in a pop-up
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    child: Image.asset(
+                                      "assets/images/alurperizinan.png",
+                                      width: 300,
+                                      height: 300,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              color: appbrand100,
+                              child: Icon(
+                                Icons.sort,
+                                color: appbrand500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Alur Perizinan",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: appneutral800,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "lihat alur perizinan",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: appneutral500,
+                                ),
+                              ),
+                              Divider(
+                                color: appneutral500,
+                                thickness: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            color: appbrand100,
+                            child: Icon(
+                              Icons.timer,
+                              color: appbrand500,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Waktu Proses Kerja",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: appneutral800,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                controller
+                                    .detailjenis.value.subProsesWaktuKerja,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: appneutral500,
+                                ),
+                              ),
+                              Divider(
+                                color: appneutral500,
+                                thickness: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // ...
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Menampilkan dialog dengan persyaratan
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Persyaratan"),
+                                    content: Container(
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        itemCount:
+                                            tkcontroller.suratSyarats.length,
+                                        itemBuilder: (context, index) {
+                                          final syarat =
+                                              tkcontroller.suratSyarats[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '${index + 1}. ',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(syarat['nama']),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              color: appbrand100,
+                              child: Icon(
+                                Icons.assignment,
+                                color: appbrand500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Persyaratan",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: appneutral800,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Lihat Persyaratan",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: appneutral500,
+                                ),
+                              ),
+                              Divider(
+                                color: appneutral500,
+                                thickness: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+// ...
                   ],
                 ),
               ),
@@ -150,38 +357,9 @@ class DetailJenisPerizinanView extends StatelessWidget {
   Future<Map<String, dynamic>> getDetailJenisPerizinan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int jenisSuratId = prefs.getInt('selected_jenis_surat_id') ?? 0;
-    String _getImagePath(String category) {
-      switch (category) {
-        case 'TK':
-          return 'assets/icons/tk.png';
-        case 'SD':
-          return 'assets/icons/sd.png';
-        case 'SMP':
-          return 'assets/icons/smp.png';
-        case 'SMA':
-          return 'assets/icons/sma.png';
-        default:
-          return 'assets/icons/default.png'; // Gambar default jika tidak cocok dengan kategori tertentu
-      }
-    }
 
     // Call the controller method to get detailed information
     TKPerizinanController controller = Get.find();
     return controller.getDetailJenisPerizinan(jenisSuratId);
-  }
-
-  String _getImagePath(String category) {
-    switch (category) {
-      case 'TK':
-        return 'assets/icons/tk.png';
-      case 'SD':
-        return 'assets/icons/sd.png';
-      case 'SMP':
-        return 'assets/icons/smp.png';
-      case 'SMA':
-        return 'assets/icons/sma.png';
-      default:
-        return 'assets/icons/default.png'; // Gambar default jika tidak cocok dengan kategori tertentu
-    }
   }
 }

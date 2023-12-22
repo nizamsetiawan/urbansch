@@ -15,4 +15,6 @@ class DetailJenisPerizinan {
       required this.noted,
       required this.subProsesWaktuKerja,
       required this.subAlurPerizinan});
+
+  get surat_syarats => null;
 }
