@@ -5,6 +5,8 @@ import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/controllers/detailjenisperizinan_c.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
+import 'package:urbanscholaria_app/models/kategori_m.dart';
+import 'package:urbanscholaria_app/widgets/button.dart';
 
 class DetailJenisPerizinanView extends StatelessWidget {
   @override
@@ -265,7 +267,8 @@ class DetailJenisPerizinanView extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("Persyaratan"),
+                                    title: Text(
+                                        "Persyaratan Perizinan ${berandaController.getSelectedCategory}"),
                                     content: Container(
                                       width: double.maxFinite,
                                       child: ListView.builder(
@@ -344,6 +347,11 @@ class DetailJenisPerizinanView extends StatelessWidget {
                     ),
 
 // ...
+                    GestureDetector(
+                      child: ButtonWidgets(
+                        label: 'Ajukan Perizinan Ini',
+                      ),
+                    )
                   ],
                 ),
               ),

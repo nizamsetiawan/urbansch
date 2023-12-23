@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:urbanscholaria_app/auth/authController.dart';
 
 import 'package:urbanscholaria_app/constant/colors.dart';
+import 'package:urbanscholaria_app/controllers/profile_c.dart';
 import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 
 class ProfileView extends StatelessWidget {
-  // final EditProfileController _profileController =
-  //     Get.put(EditProfileController());
+  final EditProfileController controller = Get.put(EditProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class ProfileView extends StatelessWidget {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    "_profileController",
+                                    controller.namaLengkapController.text,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -72,6 +72,14 @@ class ProfileView extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 10),
+                                  Text(
+                                    controller.pekerjaanController.text,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: appwhite,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

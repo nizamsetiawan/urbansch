@@ -48,9 +48,9 @@ class TKPerizinanController extends GetxController {
       final jenisSuratList = (data['data'] as List)
           .map((item) => JenisSurat.fromJson(item))
           .toList();
-
+      final tigaJenisSurat = jenisSuratList.take(3).toList();
       // Hapus filter .where sementara
-      permitstk.assignAll(jenisSuratList.map((jenisSurat) {
+      permitstk.assignAll(tigaJenisSurat.map((jenisSurat) {
         return TKCardPerizinan(
           title: jenisSurat.nama,
           requirements: '14 Syarat Dokumen',

@@ -24,4 +24,6 @@ abstract class RouteNames {
   static const perizinansma = '/perizinansma';
   //detailjenisperizinan
   static const detailjenisperizinan = "/detailjenisperizinan";
+  //ajukanperizinan
+  static const ajukanjenisperizinanform = '/ajukanjenisperizinanform';
 }
