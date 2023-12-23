@@ -5,7 +5,7 @@ import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/controllers/detailjenisperizinan_c.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
-import 'package:urbanscholaria_app/models/kategori_m.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 
 class DetailJenisPerizinanView extends StatelessWidget {
@@ -348,10 +348,18 @@ class DetailJenisPerizinanView extends StatelessWidget {
 
 // ...
                     GestureDetector(
+                      onTap: () {
+                        // Navigate to the form page
+                        Get.toNamed(RouteNames.ajukanjenisperizinanform,
+                            arguments: {
+                              'category': berandaController.getSelectedCategory,
+                              'jenisSuratId': detailJenisPerizinan['id'],
+                            });
+                      },
                       child: ButtonWidgets(
                         label: 'Ajukan Perizinan Ini',
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

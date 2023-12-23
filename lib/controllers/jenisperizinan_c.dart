@@ -49,7 +49,7 @@ class TKPerizinanController extends GetxController {
           .map((item) => JenisSurat.fromJson(item))
           .toList();
       final tigaJenisSurat = jenisSuratList.take(3).toList();
-      // Hapus filter .where sementara
+
       permitstk.assignAll(tigaJenisSurat.map((jenisSurat) {
         return TKCardPerizinan(
           title: jenisSurat.nama,
@@ -77,7 +77,6 @@ class TKPerizinanController extends GetxController {
     // Print selected jenis surat ID for verification
     print('Selected Jenis Surat ID: ${jenisSurat.id}');
 
-    // Tambahkan navigasi sesuai kebutuhan Anda
     Get.toNamed(RouteNames.detailjenisperizinan, arguments: jenisSurat);
   }
 
@@ -90,9 +89,72 @@ class TKPerizinanController extends GetxController {
       suratSyarats.value =
           List<Map<String, dynamic>>.from(data['data']['surat_syarats']);
       print(data);
+
       return data['data'];
     } else {
       throw Exception('Gagal memuat data detail jenis perizinan');
+    }
+  }
+
+  Future<void> sendFormDataToAPI({
+    required String kategori,
+    required String jenisPerizinan,
+    required String namaSekolah,
+    required String alamatSekolah,
+    required double latitude,
+    required double longitude,
+    required int jenisSuratId,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        // Handle the case where the access token is not available
+        return;
+      }
+
+      // Access BerandaController to get selected_category
+      BerandaController berandaController = Get.find();
+
+      // Wait for BerandaController to be initialized
+      await Future.delayed(Duration(milliseconds: 100));
+
+      String? selectedCategory = berandaController.selectedCategory.value;
+
+      // Print selected category for verification
+      print('Selected Category: $selectedCategory');
+
+      final url = Uri.parse(BASE_API + "api/surat");
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'kategori': kategori,
+          // 'surat_jenis_id': jenisSuratId,
+          'nama': namaSekolah,
+          'surat_jenis_id': jenisSuratId,
+          'alamat_lokasi': alamatSekolah,
+          'latitude': latitude.toString(),
+          'longitude': longitude.toString(),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Sukses, lakukan sesuatu jika diperlukan
+        print('Data berhasil terkirim!');
+        print('Response: ${response.body}');
+      } else {
+        // Gagal, tampilkan pesan kesalahan atau lakukan sesuatu yang sesuai
+        print('Gagal mengirim data. Status code: ${response.statusCode}');
+        print('Response: ${response.body}');
+      }
+    } catch (error) {
+      // Tangani kesalahan jika terjadi
+      print('Error: $error');
     }
   }
 }
