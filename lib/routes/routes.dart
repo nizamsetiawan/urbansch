@@ -26,4 +26,6 @@ abstract class RouteNames {
   static const detailjenisperizinan = "/detailjenisperizinan";
   //ajukanperizinan
   static const ajukanjenisperizinanform = '/ajukanjenisperizinanform';
+  //ajukanperizinan
+  static const ajukanperizinanfile = '/ajukanperizinanfile';
 }

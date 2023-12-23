@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/views/ajukanperizinan.dart';
+import 'package:urbanscholaria_app/views/ajukanperizinanfile.dart';
 import 'package:urbanscholaria_app/views/beranda.dart';
 import 'package:urbanscholaria_app/views/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/chat.dart';
@@ -122,6 +123,10 @@ class AppPage {
     GetPage(
       name: RouteNames.ajukanjenisperizinanform,
       page: () => AjukanPerizinanView(),
+    ),
+    GetPage(
+      name: RouteNames.ajukanperizinanfile,
+      page: () => AjukanPerizinanFileView(),
     ),
   ];
 }

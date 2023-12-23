@@ -5,6 +5,7 @@ import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 
 class AjukanPerizinanView extends StatefulWidget {
@@ -384,7 +385,11 @@ class _AjukanPerizinanViewState extends State<AjukanPerizinanView> {
         alamatSekolah: alamatSekolah,
         latitude: latitude,
         longitude: longitude,
-      );
+      ); // Navigasi ke halaman "ajukanperizinanfileview" setelah berhasil mengirim data
+      Get.toNamed(RouteNames.ajukanperizinanfile, arguments: {
+        'jenisSuratId': jenisSuratId,
+        'kategori': kategori,
+      });
 
       // Perform any additional actions after sending the data if needed
     } catch (error) {
