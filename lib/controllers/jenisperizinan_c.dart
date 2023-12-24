@@ -145,12 +145,10 @@ class TKPerizinanController extends GetxController {
 
       if (response.statusCode == 200) {
         // Sukses, lakukan sesuatu jika diperlukan
-        print('Data berhasil terkirim!');
-        print('Response: ${response.body}');
+        print('Data berhasil terkirim! Status code: ${response.body}');
       } else {
         // Gagal, tampilkan pesan kesalahan atau lakukan sesuatu yang sesuai
         print('Gagal mengirim data. Status code: ${response.statusCode}');
-        print('Response: ${response.body}');
       }
     } catch (error) {
       // Tangani kesalahan jika terjadi
@@ -158,51 +156,51 @@ class TKPerizinanController extends GetxController {
     }
   }
 
-  Future<void> uploadDocument({
-    required int suratId,
-    required int suratJenisId,
-    required int suratSyaratId,
-    required String filePath,
-  }) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
+  // Future<void> uploadDocument({
+  //   required int suratId,
+  //   required int suratJenisId,
+  //   required int suratSyaratId,
+  //   required String filePath,
+  // }) async {
+  //   try {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     String? token = prefs.getString('access_token');
 
-      if (token == null) {
-        // Handle the case where the access token is not available
-        return;
-      }
+  //     if (token == null) {
+  //       // Handle the case where the access token is not available
+  //       return;
+  //     }
 
-      final url = Uri.parse(
-        '$BASE_API/api/surat/$suratId/surat-jenis/$suratJenisId/upload-dokumen/$suratSyaratId',
-      );
+  //     final url = Uri.parse(
+  //       '$BASE_API/api/surat/$suratId/surat-jenis/$suratJenisId/upload-dokumen/$suratSyaratId',
+  //     );
 
-      // Contoh request untuk mengunggah dokumen menggunakan package http
-      var request = http.MultipartRequest('POST', url)
-        ..headers['Authorization'] = 'Bearer $token'
-        ..files.add(
-          await http.MultipartFile.fromPath(
-            'dokumen_upload',
-            filePath,
-          ),
-        );
+  //     // Contoh request untuk mengunggah dokumen menggunakan package http
+  //     var request = http.MultipartRequest('POST', url)
+  //       ..headers['Authorization'] = 'Bearer $token'
+  //       ..files.add(
+  //         await http.MultipartFile.fromPath(
+  //           'dokumen_upload',
+  //           filePath,
+  //         ),
+  //       );
 
-      // Kirim request dan terima response
-      http.Response response =
-          await http.Response.fromStream(await request.send());
+  //     // Kirim request dan terima response
+  //     http.Response response =
+  //         await http.Response.fromStream(await request.send());
 
-      if (response.statusCode == 200) {
-        // Sukses, lakukan sesuatu jika diperlukan
-        print('Dokumen berhasil diunggah!');
-        print('Response: ${response.body}');
-      } else {
-        // Gagal, tampilkan pesan kesalahan atau lakukan sesuatu yang sesuai
-        print('Gagal mengunggah dokumen. Status code: ${response.statusCode}');
-        print('Response: ${response.body}');
-      }
-    } catch (error) {
-      // Tangani kesalahan jika terjadi
-      print('Error uploading document: $error');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       // Sukses, lakukan sesuatu jika diperlukan
+  //       print('Dokumen berhasil diunggah!');
+  //       print('Response: ${response.body}');
+  //     } else {
+  //       // Gagal, tampilkan pesan kesalahan atau lakukan sesuatu yang sesuai
+  //       print('Gagal mengunggah dokumen. Status code: ${response.statusCode}');
+  //       print('Response: ${response.body}');
+  //     }
+  //   } catch (error) {
+  //     // Tangani kesalahan jika terjadi
+  //     print('Error uploading document: $error');
+  //   }
+  // }
 }

@@ -99,6 +99,10 @@ class _PermissionWidgetState extends State<PermissionWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            widget.viewModel.hintText,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          Text(
             widget.viewModel.subTitle,
             style: TextStyle(fontSize: 10, color: appneutral500),
           ),

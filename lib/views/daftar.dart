@@ -556,7 +556,7 @@ class DaftarView extends StatelessWidget {
 
                 PermissionWidget(
                   viewModel: PermissionViewModel(
-                    hintText: 'Pilih Foto',
+                    hintText: 'Foto',
                     subTitle: 'Pilih foto untuk profil',
                   ),
                   onFilePicked: (title, filePath) {
@@ -566,7 +566,7 @@ class DaftarView extends StatelessWidget {
                 //foto ktp
                 PermissionWidget(
                   viewModel: PermissionViewModel(
-                    hintText: 'Pilih Foto KTP',
+                    hintText: 'KTP',
                     subTitle: 'Pilih foto KTP untuk verifikasi identitas',
                   ),
                   onFilePicked: (title, filePath) {
