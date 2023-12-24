@@ -49,6 +49,14 @@ class _PermissionWidgetState extends State<PermissionWidget> {
     }
   }
 
+  String _getShortenedFileName(String filePath) {
+    const int maxLength = 20; // Ganti sesuai kebutuhan
+    String fileName = filePath.split('/').last;
+    return fileName.length <= maxLength
+        ? fileName
+        : '${fileName.substring(0, maxLength - 3)}...${fileName.substring(fileName.length - 3)}';
+  }
+
   Widget _buildFileUpload() {
     return GestureDetector(
       onTap: () async {
@@ -70,7 +78,7 @@ class _PermissionWidgetState extends State<PermissionWidget> {
           children: [
             Text(
               'Pilih File',
-              style: TextStyle(fontSize: 10, color: appneutral500),
+              style: TextStyle(fontSize: 12, color: appneutral500),
             ),
             VerticalDivider(
               color: appneutral300,
@@ -78,12 +86,12 @@ class _PermissionWidgetState extends State<PermissionWidget> {
             ),
             widget.viewModel.filePath != null
                 ? Text(
-                    '${widget.viewModel.filePath!.split('/').last}',
-                    style: TextStyle(fontSize: 10, color: appneutral500),
+                    '${_getShortenedFileName(widget.viewModel.filePath!)}',
+                    style: TextStyle(fontSize: 12, color: appneutral500),
                   )
                 : Text(
                     'Belum ada file yang dipilih',
-                    style: TextStyle(fontSize: 10, color: appneutral500),
+                    style: TextStyle(fontSize: 12, color: appneutral500),
                   ),
           ],
         ),
@@ -107,7 +115,7 @@ class _PermissionWidgetState extends State<PermissionWidget> {
             style: TextStyle(fontSize: 10, color: appneutral500),
           ),
           SizedBox(height: 10),
-          _buildFileUpload(), // Menggunakan widget _buildFileUpload yang telah diperbarui
+          _buildFileUpload(),
         ],
       ),
     );

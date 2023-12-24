@@ -201,7 +201,7 @@ class BerandaView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 30, left: 36),
                     child: Text(
-                      "Hai ${editProfileController.pekerjaanController.text}!",
+                      "Hai ${editProfileController.pekerjaanController.text ?? ''}!",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -227,7 +227,7 @@ class BerandaView extends StatelessWidget {
                   color: Colors.black.withOpacity(0.4),
                   blurRadius: 25,
                   spreadRadius: -5,
-                  offset: const Offset(0, 9), // changes position of shadow
+                  offset: const Offset(0, 9), // mengubah posisi bayangan
                 ),
               ],
             ),

@@ -10,6 +10,7 @@ import 'package:urbanscholaria_app/routes/routes.dart';
 class TKPerizinanController extends GetxController {
   RxList<Map<String, dynamic>> suratSyarats = <Map<String, dynamic>>[].obs;
   var permitstk = <TKCardPerizinan>[].obs;
+  var isChecked = false.obs;
 
   @override
   void onInit() {

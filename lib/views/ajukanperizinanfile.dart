@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,6 +7,7 @@ import 'package:urbanscholaria_app/constant/base_api.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/controllers/jenisperizinan_c.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 import 'package:urbanscholaria_app/widgets/inputdata_card.dart';
 import 'package:http/http.dart' as http;
@@ -190,20 +192,113 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
-                      onTap: () async {
-                        print(
-                            'Sebelum uploadDocumentToAPI: suratId: $suratId, suratSyaratIds: $suratSyaratIds');
-                        for (var suratSyaratId in suratSyaratIds) {
-                          await uploadDocumentToAPI(
-                            suratId: suratId,
-                            suratJenisId: detailJenisPerizinan['id'],
-                            suratSyaratId: suratSyaratId,
-                            dokumenPath: ktpController.text,
-                          );
-                        }
-                        print('Setelah uploadDocumentToAPI');
-                      },
-                      child: ButtonWidgets(label: "Ajukan Perizinan"),
+                      onTap: () => Get.dialog(
+                        AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          backgroundColor: appbrand50,
+                          title: const Text('Ketentuan & Pernyataan'),
+                          titleTextStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: appneutral800,
+                          ),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Menyatakan\n'
+                                '1. Bersedia mengikuti seluruh proses pengajuan perizinan dari awal sampai selesai.\n'
+                                '2. Bersedia memenuhi persyaratan administratif serta syarat dan ketentuan yang berlaku.\n'
+                                '3. Bersedia menaati segala ketentuan dan tata tertib yang telah ditentukan.\n'
+                                '4. Mengerti dan setuju bahwa aplikasi ini hanya digunakan untuk kebutuhan pengajuan administratif pengajuan di bidang pendidikan.\n'
+                                '5. Bersedia memberikan informasi pribadi yang tercantum dalam form pendaftaran.\n'
+                                '6. Setuju dan mengerti apabila dokumen pengajuan yang diajukan tidak sesuai sehingga pengajuan akan ditolak.',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: appneutral500,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Obx(() => CheckboxListTile(
+                                    activeColor: appbrand500,
+                                    title: const Text(
+                                      'Saya telah bersedia mengikuti ketentuan yang ada pada pernyataan perizinan ini.',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: appneutral500,
+                                      ),
+                                    ),
+                                    value: tkController.isChecked.value,
+                                    onChanged: (newValue) {
+                                      tkController.isChecked.value =
+                                          newValue ?? false;
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                  )),
+                              const SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: () async {
+                                  print(
+                                      'Sebelum uploadDocumentToAPI: suratId: $suratId, suratSyaratIds: $suratSyaratIds');
+                                  for (var suratSyaratId in suratSyaratIds) {
+                                    await uploadDocumentToAPI(
+                                      suratId: suratId,
+                                      suratJenisId: detailJenisPerizinan['id'],
+                                      suratSyaratId: suratSyaratId,
+                                      dokumenPath: ktpController.text,
+                                    );
+                                  }
+                                  print('Setelah uploadDocumentToAPI');
+
+                                  if (tkController.isChecked.value) {
+                                    AwesomeDialog(
+                                      padding: const EdgeInsets.all(15),
+                                      context: context,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.rightSlide,
+                                      title:
+                                          'Terima Kasih! Permohonanmu sudah kami terima',
+                                      titleTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: appbrand500,
+                                      ),
+                                      desc:
+                                          'Pengajuan permohonan pengajuan perizinan telah kami terima dan akan melewati tahapan perizinan. Kamu bisa melihat permohonan mu di menu riwayat dan bisa melacak tiap tahapan perizinan dengan ID Dokumen dan Scan Barcode.',
+                                      descTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: appneutral600,
+                                      ),
+                                      btnOkOnPress: () {
+                                        Get.offAllNamed(
+                                            RouteNames.bottomnavigation);
+                                      },
+                                      btnOkText: "Selesai",
+                                    )..show();
+                                  } else {
+                                    Get.snackbar('Perhatian',
+                                        'Harap setujui pernyataan perizinan terlebih dahulu',
+                                        backgroundColor: appneutral50);
+                                  }
+                                },
+                                child: const ButtonWidgets(
+                                  label: "Ajukan Perizinan",
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      child: const ButtonWidgets(
+                        label: "Selanjutnya",
+                      ),
                     ),
                   ],
                 ),
