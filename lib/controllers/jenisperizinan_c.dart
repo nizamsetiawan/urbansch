@@ -146,6 +146,18 @@ class TKPerizinanController extends GetxController {
       if (response.statusCode == 200) {
         // Sukses, lakukan sesuatu jika diperlukan
         print('Data berhasil terkirim! Status code: ${response.body}');
+        // Parse the response body as JSON
+        Map<String, dynamic> responseData = json.decode(response.body);
+
+        // Access the 'id' field from the 'data' object
+        int suratId = responseData['data']['id'];
+        // Print the 'id'
+        print('Surat ID: $suratId');
+        // Save values in SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setInt('suratId', suratId);
+
+// Use these values as needed
       } else {
         // Gagal, tampilkan pesan kesalahan atau lakukan sesuatu yang sesuai
         print('Gagal mengirim data. Status code: ${response.statusCode}');

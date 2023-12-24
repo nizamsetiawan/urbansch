@@ -32,7 +32,7 @@ class _PermissionWidgetState extends State<PermissionWidget> {
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png'],
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
     );
 
     if (result != null && result.files.isNotEmpty) {
