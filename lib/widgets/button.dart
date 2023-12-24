@@ -4,7 +4,9 @@ import 'package:urbanscholaria_app/constant/colors.dart';
 
 class ButtonWidgets extends StatelessWidget {
   final String? label;
-  const ButtonWidgets({this.label});
+  const ButtonWidgets({
+    this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
