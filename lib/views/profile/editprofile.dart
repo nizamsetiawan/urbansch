@@ -45,8 +45,8 @@ class EditProfileView extends StatelessWidget {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    "",
+                                  child: Image.asset(
+                                    "assets/icons/ditolak.png",
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     height: 200,

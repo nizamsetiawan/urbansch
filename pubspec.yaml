@@ -53,6 +53,7 @@ dependencies:
   google_maps_flutter: ^2.5.0
   geocoding: ^2.1.1
   baseflow_plugin_template: ^2.1.2
+  intl: ^0.19.0
 
 
 dev_dependencies:

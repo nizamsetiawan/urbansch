@@ -13,6 +13,7 @@ import 'package:urbanscholaria_app/views/kategoriperizinan/SMP/perizinansmp.dart
 import 'package:urbanscholaria_app/views/kategoriperizinan/TK/perizinantk.dart';
 import 'package:urbanscholaria_app/views/login.dart';
 import 'package:urbanscholaria_app/views/newpass.dart';
+import 'package:urbanscholaria_app/views/notifikasi.dart';
 import 'package:urbanscholaria_app/views/onboarding.dart';
 import 'package:urbanscholaria_app/views/profile.dart';
 import 'package:urbanscholaria_app/views/profile/about_view.dart';
@@ -127,6 +128,11 @@ class AppPage {
     GetPage(
       name: RouteNames.ajukanperizinanfile,
       page: () => AjukanPerizinanFileView(),
+    ),
+    //notifikasi
+    GetPage(
+      name: RouteNames.notifikasi,
+      page: () => NotifikasiView(),
     ),
   ];
 }

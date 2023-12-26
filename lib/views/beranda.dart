@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/beranda_c.dart';
 import 'package:urbanscholaria_app/controllers/profile_c.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
 
 import 'package:urbanscholaria_app/widgets/aktivitas_card_beranda.dart';
 import 'package:urbanscholaria_app/widgets/kategori_card_beranda.dart';
@@ -184,7 +185,7 @@ class BerandaView extends StatelessWidget {
                     top: 23,
                     left: 300,
                     child: GestureDetector(
-                      // onTap: () => Get.toNamed(RouteNames.notification),
+                      onTap: () => Get.toNamed(RouteNames.notifikasi),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Container(
@@ -201,7 +202,7 @@ class BerandaView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 30, left: 36),
                     child: Text(
-                      "Hai ${editProfileController.pekerjaanController.text ?? ''}!",
+                      "Hai ${editProfileController.namaLengkapController.text ?? ''}!",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

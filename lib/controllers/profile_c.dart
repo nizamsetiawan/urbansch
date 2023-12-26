@@ -59,6 +59,12 @@ class EditProfileController extends GetxController {
         // userData(jsonResponse['data']);
         print('Response Body: $jsonResponse');
         isLoading(false);
+        // Mengakses user_id
+        var userId = jsonResponse['data']['id'];
+        print('User ID: $userId');
+
+        // Menyimpan user_id di SharedPreferences
+        prefs.setInt('user_id', userId);
 
         // Set nilai controller sesuai dengan data dari API
         usernameController.text = jsonResponse['data']['username'] ?? '';
