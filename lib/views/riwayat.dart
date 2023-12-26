@@ -22,12 +22,27 @@ class _RiwayatViewState extends State<RiwayatView> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget buildCard(Map<String, dynamic>? data) {
     if (data == null) {
-      return SizedBox.shrink();
+      // Mengatasi kasus ketika data null
+      return SizedBox.shrink(); // atau elemen UI pengganti lainnya
     }
 
     final suratJenis = data['surat_jenis'] as Map<String, dynamic>?;
+    Color statusColor = Colors.orange; // Warna default jika status tidak sesuai
+    // Tentukan warna berdasarkan status
+    if (data['status'] == 'Ditolak') {
+      statusColor = Colors.red;
+    } else if (data['status'] == 'Penjadwalan Survey') {
+      statusColor = Colors.orange;
+    } else if (data['status'] == 'Selesai') {
+      statusColor = Colors.green;
+    }
 
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -52,23 +67,42 @@ class _RiwayatViewState extends State<RiwayatView> {
               ),
             ),
             SizedBox(height: 8),
-            Text(
-              DateFormat('yyyy MMMM dd').format(DateTime.parse(
-                  data['created_at'] ?? DateTime.now().toString())),
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              '${data['nama'] ?? 'Nama Tidak Tersedia'}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             Row(
               children: [
-                Icon(Icons.map),
+                Icon(
+                  Icons.timer,
+                  color: appneutral500,
+                ),
+                Text(
+                  DateFormat('yyyy MMMM dd').format(DateTime.parse(
+                      data['created_at'] ?? DateTime.now().toString())),
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(
+                  Icons.blinds_closed_outlined,
+                  color: appneutral500,
+                ),
+                Text(
+                  '${data['nama'] ?? 'Nama Tidak Tersedia'}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.grey),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(
+                  Icons.map,
+                  color: appneutral500,
+                ),
                 Text(
                   '${data['alamat_lokasi'] ?? 'Alamat Tidak Tersedia'}',
                   style: TextStyle(
@@ -77,19 +111,18 @@ class _RiwayatViewState extends State<RiwayatView> {
                 ),
               ],
             ),
+            SizedBox(height: 8),
             Text(
               'ID Pengajuan: ${data['id'] ?? 'ID Tidak Tersedia'}',
               style: TextStyle(
-                color: Colors.grey,
+                color: appbrand500,
               ),
             ),
             SizedBox(height: 8),
             Text(
               'Status: ${data['status'] ?? 'Status Tidak Tersedia'}',
               style: TextStyle(
-                color: data['status'] == 'Pengajuan Ditolak'
-                    ? Colors.red
-                    : Colors.orange,
+                color: statusColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -99,7 +132,59 @@ class _RiwayatViewState extends State<RiwayatView> {
     );
   }
 
-  Widget buildRiwayatScreen(List<dynamic>? data) {
+  Widget buildProsesScreen(List<dynamic>? data) {
+    if (data == null) {
+      return CircularProgressIndicator();
+    }
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return buildCard(data[index]);
+      },
+    );
+  }
+
+  Widget buildVerifikasiScreen(List<dynamic>? data) {
+    if (data == null) {
+      return CircularProgressIndicator();
+    }
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return buildCard(data[index]);
+      },
+    );
+  }
+
+  Widget buildSurveyScreen(List<dynamic>? data) {
+    if (data == null) {
+      return CircularProgressIndicator();
+    }
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return buildCard(data[index]);
+      },
+    );
+  }
+
+  Widget buildDitolakScreen(List<dynamic>? data) {
+    if (data == null) {
+      return CircularProgressIndicator();
+    }
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return buildCard(data[index]);
+      },
+    );
+  }
+
+  Widget buildSelesaiScreen(List<dynamic>? data) {
     if (data == null) {
       return CircularProgressIndicator();
     }
@@ -115,12 +200,10 @@ class _RiwayatViewState extends State<RiwayatView> {
   Future<List<dynamic>> fetchData(String queryParameters) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
-    int userId = prefs.getInt('user_id') ?? 0;
 
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://urbanscholaria.my.id/api/surat/$userId$queryParameters'),
+        Uri.parse('https://urbanscholaria.my.id/api/surat$queryParameters'),
         headers: {
           "Authorization": "Bearer $token",
         },
@@ -141,6 +224,7 @@ class _RiwayatViewState extends State<RiwayatView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: appbrand500,
         title: const Text("RIWAYAT"),
         centerTitle: true,
         elevation: 0,
@@ -151,7 +235,11 @@ class _RiwayatViewState extends State<RiwayatView> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                buildTab('Riwayat', 0),
+                buildTab('Proses', 0, Icons.access_time),
+                buildTab('Verifikasi', 1, Icons.verified),
+                buildTab('Survey', 2, Icons.map_sharp),
+                buildTab('Ditolak', 3, Icons.do_not_touch_outlined),
+                buildTab('Selesai', 4, Icons.document_scanner),
                 // Tambahkan tab lain sesuai kebutuhan
               ],
             ),
@@ -175,7 +263,56 @@ class _RiwayatViewState extends State<RiwayatView> {
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
-                        return buildRiwayatScreen(snapshot.data);
+                        return buildProsesScreen(snapshot.data);
+                      }
+                    },
+                  ),
+                  FutureBuilder(
+                    future: fetchData('?status=Verifikasi Operator'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        print(snapshot.data);
+                        return buildVerifikasiScreen(snapshot.data);
+                      }
+                    },
+                  ),
+                  FutureBuilder(
+                    future: fetchData('?status=Penjadwalan Survey'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return buildSurveyScreen(snapshot.data);
+                      }
+                    },
+                  ),
+                  FutureBuilder(
+                    future: fetchData('?status=Ditolak'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return buildDitolakScreen(snapshot.data);
+                      }
+                    },
+                  ),
+                  FutureBuilder(
+                    future: fetchData('?status=Selesai'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return buildSelesaiScreen(snapshot.data);
                       }
                     },
                   ),
@@ -189,7 +326,7 @@ class _RiwayatViewState extends State<RiwayatView> {
     );
   }
 
-  Widget buildTab(String title, int index) {
+  Widget buildTab(String title, int index, IconData icon) {
     return InkWell(
       onTap: () {
         _pageController.animateToPage(
@@ -211,6 +348,12 @@ class _RiwayatViewState extends State<RiwayatView> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Icon(
+              icon,
+              color: _currentIndex == index ? appbrand500 : Colors.grey,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
             Text(
               title,
               style: TextStyle(
