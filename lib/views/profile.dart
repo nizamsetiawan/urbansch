@@ -242,7 +242,7 @@ void _showExitConfirmationDialog() {
       Get.back();
     },
     btnOkOnPress: () async {
-      await Get.find<AuthController>().logout();
+      await Get.putAsync(() async => AuthController());
     },
   )..show();
 }

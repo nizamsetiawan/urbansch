@@ -23,19 +23,15 @@ class TKPerizinanController extends GetxController {
     String? token = prefs.getString('access_token');
 
     if (token == null) {
-      // Handle the case where the access token is not available
       return;
     }
 
-    // Access BerandaController to get selected_category
     BerandaController berandaController = Get.find();
 
-    // Wait for BerandaController to be initialized
     await Future.delayed(Duration(milliseconds: 100));
 
     String? selectedCategory = berandaController.selectedCategory.value;
 
-    // Print selected category for verification
     print('Selected Category: $selectedCategory');
 
     final url = Uri.parse(BASE_API + "api/surat-jenis/");

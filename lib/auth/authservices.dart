@@ -1,3 +1,5 @@
+// auth_services.dart
+
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/base_api.dart';
@@ -6,6 +8,7 @@ import 'package:urbanscholaria_app/routes/routes.dart';
 
 class AuthService extends GetxService {
   var accessToken = ''.obs;
+  var role = ''.obs; // Tambahkan variabel peran
 
   Future<void> init() async {
     // Perform any initialization if needed
@@ -20,6 +23,7 @@ class AuthService extends GetxService {
 
       if (response.statusCode == 200) {
         await saveAccessToken(response.body['access_token']);
+        await saveRole(response.body['data']['role']['nama']);
 
         Get.snackbar(
           'Berhasil',
@@ -27,7 +31,9 @@ class AuthService extends GetxService {
           backgroundColor: appdone500,
           colorText: appwhite,
         );
-        Get.offNamed(RouteNames.bottomnavigation);
+
+        // Tampilkan dashboard berdasarkan peran
+        showDashboardBasedOnUserRole();
       } else {
         print('Failed to sign in: ${response.body}');
         Get.snackbar(
@@ -49,7 +55,30 @@ class AuthService extends GetxService {
     accessToken.value = token;
   }
 
+  Future<void> saveRole(String userRole) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', userRole);
+    role.value = userRole;
+  }
+
   String getAccessToken() {
     return accessToken.value;
+  }
+
+  String getUserRole() {
+    return role.value;
+  }
+
+  void showDashboardBasedOnUserRole() {
+    // Ambil peran pengguna
+    String userRole = getUserRole();
+
+    // Tentukan rute dashboard berdasarkan peran
+    String dashboardRoute = (userRole == 'Operator')
+        ? RouteNames.bottomnavigationoperator
+        : RouteNames.bottomnavigation;
+
+    // Navigasi ke dashboard yang sesuai
+    Get.offNamed(dashboardRoute);
   }
 }

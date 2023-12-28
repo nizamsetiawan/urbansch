@@ -22,13 +22,16 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
   late int suratId;
   late List<int> suratSyaratIds;
   late TKPerizinanController tkController;
+  List<TextEditingController> controllers = [];
 
   @override
   void initState() {
     super.initState();
     initializeData();
     tkController = Get.put(TKPerizinanController());
-    // fetchSyaratPerizinanData();
+    tkController.suratSyarats.forEach((_) {
+      controllers.add(TextEditingController());
+    });
   }
 
   Future<void> initializeData() async {
@@ -36,18 +39,6 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
     suratId = prefs.getInt('suratId') ?? 0;
     setState(() {});
   }
-
-  // Future<void> fetchSyaratPerizinanData() async {
-  //   try {
-  //     // Gantilah ini dengan panggilan API yang sebenarnya
-  //     // dan perbarui tkController.suratSyarats
-  //     final response = await http.get('$BASE_API/api/syarat_perizinan');
-  //     final data = json.decode(response.body);
-  //     tkController.suratSyarats = data['syarat_perizinan'];
-  //   } catch (error) {
-  //     print("Error fetching syarat perizinan data: $error");
-  //   }
-  // }
 
   Future<Map<String, dynamic>> getDetailJenisPerizinan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,7 +59,6 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
       String? token = prefs.getString('access_token');
 
       if (token == null) {
-        // Handle the case where the access token is not available
         return;
       }
 
@@ -83,36 +73,59 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
       var response = await request.send();
 
       if (response.statusCode == 200) {
-        print('Document uploaded successfully');
-
         final Map<String, dynamic> responseData =
             await http.Response.fromStream(response)
-                .then((value) => value.body)
-                .then((value) => json.decode(value));
+                .then((value) => json.decode(value.body));
 
-        if (responseData.containsKey('surat_dokumen')) {
-          final List<dynamic> suratDokumen = responseData['surat_dokumen'];
-          if (suratDokumen.isNotEmpty) {
-            final int uploadedDocumentId = suratDokumen.first['id'];
-            print('Uploaded Document ID: $uploadedDocumentId');
-            // Do something with the uploaded document ID if needed
-          }
+        if (responseData.containsKey('message')) {
+          print('Document uploaded successfully: ${responseData['message']}');
+        } else {
+          print('Unexpected response format from API');
         }
       } else {
         print('Document upload failed. Status code: ${response.statusCode}');
-        // Print the response body for more details
         print('Response Body: ${await response.stream.bytesToString()}');
-        // Handle the error
       }
     } catch (error) {
       print('Error uploading document: $error');
     }
   }
 
+  Future<void> patchSuratDiajukan(int suratId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        return;
+      }
+
+      final url = Uri.parse(BASE_API + 'api/surat/$suratId/surat-diajukan');
+
+      var response = await http.patch(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        if (responseData.containsKey('message')) {
+          print('Surat diajukan successfully: ${responseData['message']}');
+        } else {
+          print('Unexpected response format from API');
+        }
+      } else {
+        print('Surat diajukan failed. Status code: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+      }
+    } catch (error) {
+      print('Error submitting surat diajukan: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController ktpController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbrand500,
@@ -181,7 +194,7 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
                                     subTitle: 'Format: PDF (Max 1mb)',
                                   ),
                                   onFilePicked: (title, filePath) {
-                                    ktpController.text = filePath;
+                                    controllers[index].text = filePath;
                                   },
                                 );
                               },
@@ -246,14 +259,17 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
                                 onTap: () async {
                                   print(
                                       'Sebelum uploadDocumentToAPI: suratId: $suratId, suratSyaratIds: $suratSyaratIds');
-                                  for (var suratSyaratId in suratSyaratIds) {
+                                  for (var i = 0;
+                                      i < suratSyaratIds.length;
+                                      i++) {
                                     await uploadDocumentToAPI(
                                       suratId: suratId,
                                       suratJenisId: detailJenisPerizinan['id'],
-                                      suratSyaratId: suratSyaratId,
-                                      dokumenPath: ktpController.text,
+                                      suratSyaratId: suratSyaratIds[i],
+                                      dokumenPath: controllers[i].text,
                                     );
                                   }
+
                                   print('Setelah uploadDocumentToAPI');
 
                                   if (tkController.isChecked.value) {
@@ -282,6 +298,11 @@ class _AjukanPerizinanFileViewState extends State<AjukanPerizinanFileView> {
                                       },
                                       btnOkText: "Selesai",
                                     )..show();
+                                    try {
+                                      await patchSuratDiajukan(suratId);
+                                    } catch (error) {
+                                      print('Error submitting form: $error');
+                                    }
                                   } else {
                                     Get.snackbar('Perhatian',
                                         'Harap setujui pernyataan perizinan terlebih dahulu',

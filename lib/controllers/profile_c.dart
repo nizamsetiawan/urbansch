@@ -55,8 +55,7 @@ class EditProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
-        // print(jsonResponse);
-        // userData(jsonResponse['data']);
+
         print('Response Body: $jsonResponse');
         isLoading(false);
         // Mengakses user_id
@@ -97,9 +96,7 @@ class EditProfileController extends GetxController {
   }
 
   bool isValidData() {
-    // Lakukan validasi data di sini
-    // Anda dapat menambahkan logika validasi sesuai kebutuhan
-    return true; // Ubah ini sesuai dengan logika validasi Anda
+    return true;
   }
 
   Future<bool> postDataToApi() async {

@@ -12,8 +12,6 @@ class ChatController extends GetxController {
   }
 
   Future<String?> _uploadImage(String imagePath) async {
-    // Di sini, Anda biasanya akan mengunggah gambar ke server
-    // Namun, untuk tujuan contoh, kita akan kembalikan path gambar yang dipilih
     return imagePath;
   }
 
@@ -21,7 +19,7 @@ class ChatController extends GetxController {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        return pickedFile.path; // Kembalikan path gambar yang dipilih
+        return pickedFile.path;
       } else {
         print('No image selected');
         return null;

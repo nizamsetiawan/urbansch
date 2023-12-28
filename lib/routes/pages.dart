@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/routes/routes.dart';
+import 'package:urbanscholaria_app/views/operator/bottomnavbar.dart';
+import 'package:urbanscholaria_app/views/operator/dashboard.dart';
 import 'package:urbanscholaria_app/views/ajukanperizinan.dart';
 import 'package:urbanscholaria_app/views/ajukanperizinanfile.dart';
 import 'package:urbanscholaria_app/views/beranda.dart';
@@ -15,6 +17,7 @@ import 'package:urbanscholaria_app/views/login.dart';
 import 'package:urbanscholaria_app/views/newpass.dart';
 import 'package:urbanscholaria_app/views/notifikasi.dart';
 import 'package:urbanscholaria_app/views/onboarding.dart';
+import 'package:urbanscholaria_app/views/operator/perizinan.view.dart';
 import 'package:urbanscholaria_app/views/profile.dart';
 import 'package:urbanscholaria_app/views/profile/about_view.dart';
 import 'package:urbanscholaria_app/views/profile/editprofile.dart';
@@ -51,6 +54,19 @@ class AppPage {
     GetPage(
       name: RouteNames.resetpass,
       page: () => ResetPassView(),
+    ),
+    //roles operator
+    GetPage(
+      name: RouteNames.bottomnavigationoperator,
+      page: () => BottomnavigationcontrollerView(),
+    ),
+    GetPage(
+      name: RouteNames.operatordashboard,
+      page: () => OperatorDashboardView(),
+    ),
+    GetPage(
+      name: RouteNames.operatorperizinan,
+      page: () => OperatorPerizinanView(),
     ),
     //bottom
     GetPage(
