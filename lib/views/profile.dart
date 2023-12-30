@@ -241,8 +241,9 @@ void _showExitConfirmationDialog() {
     btnCancelOnPress: () {
       Get.back();
     },
-    btnOkOnPress: () async {
-      await Get.putAsync(() async => AuthController());
+    btnOkOnPress: () {
+      // Panggil fungsi logout dari AuthController
+      AuthController().logout();
     },
   )..show();
 }

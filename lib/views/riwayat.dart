@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,6 +20,7 @@ class RiwayatView extends StatefulWidget {
 class _RiwayatViewState extends State<RiwayatView> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
+  int? userId; // Define userId here
 
   @override
   void dispose() {
@@ -31,6 +31,12 @@ class _RiwayatViewState extends State<RiwayatView> {
   @override
   void initState() {
     super.initState();
+    getUserId().then((value) {
+      setState(() {
+        userId = value;
+        print('User ID: $userId');
+      });
+    });
   }
 
   Future<int?> getUserId() async {
@@ -88,124 +94,125 @@ class _RiwayatViewState extends State<RiwayatView> {
     }
 
     return InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailScreen(
-                requestData: data,
-                namaLengkap: data['user']['nama_lengkap'] ??
-                    'Nama Lengkap Tidak Tersedia',
-              ),
-            ),
-          );
-        },
-        child: Card(
-          margin: EdgeInsets.symmetric(vertical: 8),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Perizinan ${data['kategori'] ?? 'Tanggal Tidak Tersedia'}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: appneutral800,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  suratJenis?['nama'] ?? 'Nama Tidak Tersedia',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.timer,
-                      color: appneutral500,
-                    ),
-                    Text(
-                      DateFormat('yyyy MMMM dd').format(DateTime.parse(
-                          data['created_at'] ?? DateTime.now().toString())),
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.blinds_closed_outlined,
-                      color: appneutral500,
-                    ),
-                    Text(
-                      '${data['nama'] ?? 'Nama Tidak Tersedia'}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.map,
-                      color: appneutral500,
-                    ),
-                    Text(
-                      '${data['alamat_lokasi'] ?? 'Alamat Tidak Tersedia'}',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'ID Pengajuan: ${data['id'] ?? 'ID Tidak Tersedia'}',
-                  style: TextStyle(
-                    color: appbrand500,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Status: ${data['status'] ?? 'Status Tidak Tersedia'}',
-                      style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        String suratId = data['id'].toString();
-                        downloadFile(suratId);
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        color: appbrand100,
-                        child: const Icon(
-                          Icons.download,
-                          color: appbrand500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(
+              requestData: data,
+              namaLengkap:
+                  data['user']['nama_lengkap'] ?? 'Nama Lengkap Tidak Tersedia',
             ),
           ),
-        ));
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Perizinan ${data['kategori'] ?? 'Tanggal Tidak Tersedia'}',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: appneutral800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                suratJenis?['nama'] ?? 'Nama Tidak Tersedia',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.timer,
+                    color: appneutral500,
+                  ),
+                  Text(
+                    DateFormat('yyyy MMMM dd').format(DateTime.parse(
+                        data['created_at'] ?? DateTime.now().toString())),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.blinds_closed_outlined,
+                    color: appneutral500,
+                  ),
+                  Text(
+                    '${data['nama'] ?? 'Nama Tidak Tersedia'}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.grey),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.map,
+                    color: appneutral500,
+                  ),
+                  Text(
+                    '${data['alamat_lokasi'] ?? 'Alamat Tidak Tersedia'}',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Text(
+                'ID Pengajuan: ${data['id'] ?? 'ID Tidak Tersedia'}',
+                style: TextStyle(
+                  color: appbrand500,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Status: ${data['status'] ?? 'Status Tidak Tersedia'}',
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      String suratId = data['id'].toString();
+                      downloadFile(suratId);
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      color: appbrand100,
+                      child: const Icon(
+                        Icons.download,
+                        color: appbrand500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildVerifikasiScreen(List<dynamic>? data) {
@@ -213,10 +220,18 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
+    // Filter data based on status 'Verifikasi Operator'
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Verifikasi Operator').toList();
+
+    if (filteredData.isEmpty) {
+      return nullvalue();
+    }
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
@@ -226,10 +241,21 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
+    // Filter data based on status 'Penjadwalan Survey' and exclude 'Ditolak'
+    List<dynamic> filteredData = data
+        .where((item) =>
+            item['status'] == 'Penjadwalan Survey' &&
+            item['status'] != 'Ditolak')
+        .toList();
+
+    if (filteredData.isEmpty) {
+      return nullvalue();
+    }
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
@@ -239,10 +265,18 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
+    // Filter data based on status 'Ditolak'
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Ditolak').toList();
+
+    if (filteredData.isEmpty) {
+      return nullvalue();
+    }
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
@@ -252,43 +286,56 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
+    // Filter data based on status 'Selesai'
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Selesai').toList();
+
+    if (filteredData.isEmpty) {
+      return nullvalue();
+    }
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
 
-  Future<List<dynamic>> fetchData(String queryParameters) async {
+  Future<List<dynamic>> fetchData(String queryParameters, int? userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
-    int? userId = await getUserId();
-
-    if (userId == null) {
-      throw Exception('User ID tidak tersedia');
-    }
 
     try {
-      final response = await http.get(
+      // Fetch data based on user ID
+      final userResponse = await http.get(
         Uri.parse(
-            'https://urbanscholaria.my.id/api/surat$queryParameters&user_id=$userId'),
+            'https://urbanscholaria.my.id/api/surat/$userId$queryParameters'),
         headers: {
           "Authorization": "Bearer $token",
         },
       );
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData);
-        // Check if 'data' is null and handle accordingly
-        List<dynamic> data = responseData['data'] ?? [];
-        return data;
+      if (userResponse.statusCode == 200) {
+        Map<String, dynamic> userResponseData = json.decode(userResponse.body);
+        print('User API Response Data: $userResponseData');
+
+        List<dynamic> userData = userResponseData['data'] ?? [];
+
+        // Sort data based on status
+        userData.sort((a, b) {
+          return a['status'].compareTo(b['status']);
+        });
+
+        return userData;
       } else {
-        throw Exception('Gagal memuat data');
+        print(
+            'Failed to fetch user data. Status code: ${userResponse.statusCode}');
+        throw Exception('Gagal memuat data user');
       }
     } catch (error) {
-      throw Exception('Error mengambil data: $error');
+      print('Error fetching user data: $error');
+      throw Exception('Error mengambil data user: $error');
     }
   }
 
@@ -334,7 +381,8 @@ class _RiwayatViewState extends State<RiwayatView> {
                 },
                 children: [
                   FutureBuilder(
-                    future: fetchData('?status=Verifikasi Operator'),
+                    future: fetchData('?status=Verifikasi Operator',
+                        userId), // Pass the user ID
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -346,8 +394,10 @@ class _RiwayatViewState extends State<RiwayatView> {
                       }
                     },
                   ),
+
                   FutureBuilder(
-                    future: fetchData('?status=Penjadwalan Survey'),
+                    future: fetchData('?status=Penjadwalan Survey',
+                        userId), // Pass the user ID
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -359,7 +409,8 @@ class _RiwayatViewState extends State<RiwayatView> {
                     },
                   ),
                   FutureBuilder(
-                    future: fetchData('?status=Ditolak'),
+                    future: fetchData(
+                        '?status=Ditolak', userId), // Pass the user ID
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -371,7 +422,8 @@ class _RiwayatViewState extends State<RiwayatView> {
                     },
                   ),
                   FutureBuilder(
-                    future: fetchData('?status=Selesai'),
+                    future: fetchData(
+                        '?status=Selesai', userId), // Pass the user ID
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();

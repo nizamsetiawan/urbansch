@@ -20,10 +20,11 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        // Hapus token dari SharedPreferences
         prefs.remove('access_token');
-        print("Failed to logout: ${response.statusCode}");
-        print(response.statusCode);
+        // Tambahkan perintah lain di sini untuk menghapus item lain jika diperlukan
 
+        // Pindah ke halaman onboarding setelah logout
         Get.offAllNamed(RouteNames.onboarding);
       } else {
         print("Failed to logout: ${response.statusCode}");
