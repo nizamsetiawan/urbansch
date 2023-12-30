@@ -280,7 +280,10 @@ class _RiwayatViewState extends State<RiwayatView> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
-        return responseData['data'];
+        print(responseData);
+        // Check if 'data' is null and handle accordingly
+        List<dynamic> data = responseData['data'] ?? [];
+        return data;
       } else {
         throw Exception('Gagal memuat data');
       }
