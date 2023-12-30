@@ -97,7 +97,7 @@ class OnboardingView extends StatelessWidget {
                         const SizedBox(height: 20),
                         GestureDetector(
                           onTap: () {
-                            Get.toNamed(RouteNames.login);
+                            // Get.toNamed(RouteNames.login);
                           },
                           child: Container(
                             height: 50,

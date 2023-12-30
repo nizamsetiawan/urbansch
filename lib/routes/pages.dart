@@ -27,6 +27,7 @@ import 'package:urbanscholaria_app/views/resetpass.dart';
 import 'package:urbanscholaria_app/views/riwayat.dart';
 import 'package:urbanscholaria_app/views/scan.dart';
 import 'package:urbanscholaria_app/views/splashscreen.dart';
+import 'package:urbanscholaria_app/views/verifikasiotp.dart';
 
 class AppPage {
   static final pages = [
@@ -54,6 +55,10 @@ class AppPage {
     GetPage(
       name: RouteNames.resetpass,
       page: () => ResetPassView(),
+    ),
+    GetPage(
+      name: RouteNames.otp,
+      page: () => OtpView(),
     ),
     //roles operator
     GetPage(

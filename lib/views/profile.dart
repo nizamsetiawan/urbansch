@@ -53,12 +53,12 @@ class ProfileView extends StatelessWidget {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        "assets/icons/ditolak.png",
+                                      child: Image.network(
+                                        "https://urbanscholaria.my.id/storage/" +
+                                            controller.fotoController.text,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
-                                        height:
-                                            200, // Sesuaikan dengan tinggi yang diinginkan
+                                        height: 200,
                                       ),
                                     ),
                                   ),

@@ -5,6 +5,8 @@ abstract class RouteNames {
   static const daftar = "/daftar";
   static const newpass = "/newpass";
   static const resetpass = '/resetpass';
+  static const otp = "/otp";
+
   //roles
   static const operatordashboard = '/operatordashboard';
   static const bottomnavigationoperator = '/bottomnavigationoperator';

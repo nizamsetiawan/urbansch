@@ -37,36 +37,54 @@ class EditProfileView extends StatelessWidget {
                         child: Center(
                           child: Column(
                             children: [
-                              Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    "assets/icons/ditolak.png",
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: 200,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "Ganti Foto Profile",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: appbrand500,
-                                ),
-                              ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Divider(
-                                  color: appneutral200,
-                                  thickness: 3,
+                                padding: const EdgeInsets.all(20.0),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          controller.updateProfilePicture();
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                              "https://urbanscholaria.my.id/storage/" +
+                                                  controller
+                                                      .fotoController.text,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: 200,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "Ganti Foto Profile",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: appbrand500,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 16),
+                                        child: Divider(
+                                          color: appneutral200,
+                                          thickness: 3,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

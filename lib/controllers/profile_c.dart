@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,6 +35,27 @@ class EditProfileController extends GetxController {
     super.onInit();
 
     fetchUser();
+  }
+
+  Future<void> updateProfilePicture() async {
+    try {
+      final ImagePicker _picker = ImagePicker();
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Handle the picked file (upload to server or process locally)
+        // You may need to use another package to upload the image to your server
+
+        // For now, you can set the local path to the image to the 'fotoController'
+        fotoController.text = pickedFile.path;
+
+        // Notify the UI to update the profile picture
+        update();
+      }
+    } catch (error) {
+      print('Error picking image: $error');
+    }
   }
 
   Future<void> fetchUser() async {

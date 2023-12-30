@@ -96,7 +96,7 @@ class DaftarC extends GetxController {
 
         Get.snackbar(
           'Berhasil',
-          'Login berhasil',
+          'Akun anda berhasil dibuat',
           backgroundColor: appdone500,
           colorText: appwhite,
         );
