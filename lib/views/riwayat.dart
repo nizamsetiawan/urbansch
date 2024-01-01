@@ -216,53 +216,69 @@ class _RiwayatViewState extends State<RiwayatView> {
   }
 
   Widget buildVerifikasiScreen(List<dynamic>? data) {
-    if (data == null) {
-      return CircularProgressIndicator();
+    if (data == null || data.isEmpty) {
+      return nullvalue(); // Assuming nullvalue is your custom widget
     }
 
+    // Filter data based on status
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Verifikasi Operator').toList();
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
 
   Widget buildSurveyScreen(List<dynamic>? data) {
-    if (data == null) {
-      return CircularProgressIndicator();
+    if (data == null || data.isEmpty) {
+      return nullvalue(); // Assuming nullvalue is your custom widget
     }
 
+    // Filter data based on status
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Penjadwalan Survey').toList();
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
 
   Widget buildDitolakScreen(List<dynamic>? data) {
-    if (data == null) {
-      return CircularProgressIndicator();
+    if (data == null || data.isEmpty) {
+      return nullvalue(); // Assuming nullvalue is your custom widget
     }
 
+    // Filter data based on status
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Ditolak').toList();
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
 
   Widget buildSelesaiScreen(List<dynamic>? data) {
-    if (data == null) {
-      return CircularProgressIndicator();
+    if (data == null || data.isEmpty) {
+      return nullvalue(); // Assuming nullvalue is your custom widget
     }
 
+    // Filter data based on status
+    List<dynamic> filteredData =
+        data.where((item) => item['status'] == 'Selesai').toList();
+
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: filteredData.length,
       itemBuilder: (context, index) {
-        return buildCard(data[index]);
+        return buildCard(filteredData[index]);
       },
     );
   }
@@ -274,7 +290,7 @@ class _RiwayatViewState extends State<RiwayatView> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://urbanscholaria.my.id/api/surat$queryParameters&user_id=$userId'),
+            'https://urbanscholaria.my.id/api/surat/$userId$queryParameters'),
         headers: {
           "Authorization": "Bearer $token",
         },

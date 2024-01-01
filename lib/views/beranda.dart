@@ -12,21 +12,42 @@ import 'package:urbanscholaria_app/widgets/kategori_card_beranda.dart';
 import 'package:urbanscholaria_app/widgets/null.dart';
 import 'package:urbanscholaria_app/widgets/result_card.dart';
 
-class BerandaView extends StatelessWidget {
+class BerandaView extends StatefulWidget {
+  BerandaView({Key? key}) : super(key: key);
+
+  @override
+  State<BerandaView> createState() => _BerandaViewState();
+}
+
+class _BerandaViewState extends State<BerandaView> {
   final BerandaController controller = Get.put(BerandaController());
+
   final EditProfileController editProfileController =
       Get.put(EditProfileController());
 
-  BerandaView({Key? key}) : super(key: key);
+  int? _userId;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserId().then((value) {
+      setState(() {
+        _userId = value;
+        print(_userId);
+      });
+    });
+  }
 
   final TextEditingController searchController = TextEditingController();
-  Future<List<dynamic>> fetchData(String queryParameters) async {
+
+  Future<List<dynamic>> fetchData(String statusFilter) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
 
     try {
       final response = await http.get(
-        Uri.parse('https://urbanscholaria.my.id/api/surat$queryParameters'),
+        Uri.parse(
+            'https://urbanscholaria.my.id/api/surat/$_userId?status=$statusFilter'),
         headers: {
           "Authorization": "Bearer $token",
         },
@@ -37,16 +58,10 @@ class BerandaView extends StatelessWidget {
         print('API Response Data: $responseData');
 
         List<dynamic> data = responseData['data'] ?? [];
-
-        // Sort data based on status
-        data.sort((a, b) {
-          return a['status'].compareTo(b['status']);
-        });
-
         return data;
       } else {
-        print('Failed to fetch data. Status code: ${response.statusCode}');
-        throw Exception('Failed to fetch data');
+        print('Gagal mengambil data. Kode status: ${response.statusCode}');
+        throw Exception('Gagal mengambil data');
       }
     } catch (error) {
       print('Error fetching data: $error');
@@ -85,6 +100,7 @@ class BerandaView extends StatelessWidget {
     'Selesai', // Diterima
     'Ditolak', // Ditolak
   ];
+
   int getJumlahPengajuan(String status) {
     if (status == 'Verifikasi Operator') {
       print('Count for Diajukan: ${controller.dataDiajukan.length}');
@@ -304,7 +320,6 @@ class BerandaView extends StatelessWidget {
   }
 
   // ... (your existing code)
-
   Widget _buildStatusView({
     required String title,
     required String statusFilter,
@@ -323,14 +338,18 @@ class BerandaView extends StatelessWidget {
     }
 
     return FutureBuilder(
-      future: fetchData('?status=$statusFilter'),
+      future: fetchData('?status=$statusFilter&user_id=$_userId'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return _buildErrorView();
+          return Text("");
         } else {
           List<dynamic> data = snapshot.data ?? [];
+
+          // Filter only data with the specified status
+          data = data.where((item) => item['status'] == statusFilter).toList();
+
           int totalCount = data.length;
 
           return Container(
@@ -364,7 +383,7 @@ class BerandaView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
-                    color: statusColor, // Set color based on status
+                    color: statusColor,
                   ),
                 ),
                 SizedBox(height: 8),
@@ -376,47 +395,7 @@ class BerandaView extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorView() {
-    return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Error',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.red, // Change color as needed
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Failed to fetch data.',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.red,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ... (your existing code)
-
   Widget _head() {
     return Stack(
       children: [
