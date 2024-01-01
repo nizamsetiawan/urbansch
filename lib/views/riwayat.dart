@@ -34,7 +34,7 @@ class _RiwayatViewState extends State<RiwayatView> {
     getUserId().then((value) {
       setState(() {
         userId = value;
-        print('User ID: $userId');
+        print(userId);
       });
     });
   }
@@ -220,18 +220,10 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
-    // Filter data based on status 'Verifikasi Operator'
-    List<dynamic> filteredData =
-        data.where((item) => item['status'] == 'Verifikasi Operator').toList();
-
-    if (filteredData.isEmpty) {
-      return nullvalue();
-    }
-
     return ListView.builder(
-      itemCount: filteredData.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
-        return buildCard(filteredData[index]);
+        return buildCard(data[index]);
       },
     );
   }
@@ -241,21 +233,10 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
-    // Filter data based on status 'Penjadwalan Survey' and exclude 'Ditolak'
-    List<dynamic> filteredData = data
-        .where((item) =>
-            item['status'] == 'Penjadwalan Survey' &&
-            item['status'] != 'Ditolak')
-        .toList();
-
-    if (filteredData.isEmpty) {
-      return nullvalue();
-    }
-
     return ListView.builder(
-      itemCount: filteredData.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
-        return buildCard(filteredData[index]);
+        return buildCard(data[index]);
       },
     );
   }
@@ -265,18 +246,10 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
-    // Filter data based on status 'Ditolak'
-    List<dynamic> filteredData =
-        data.where((item) => item['status'] == 'Ditolak').toList();
-
-    if (filteredData.isEmpty) {
-      return nullvalue();
-    }
-
     return ListView.builder(
-      itemCount: filteredData.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
-        return buildCard(filteredData[index]);
+        return buildCard(data[index]);
       },
     );
   }
@@ -286,18 +259,10 @@ class _RiwayatViewState extends State<RiwayatView> {
       return CircularProgressIndicator();
     }
 
-    // Filter data based on status 'Selesai'
-    List<dynamic> filteredData =
-        data.where((item) => item['status'] == 'Selesai').toList();
-
-    if (filteredData.isEmpty) {
-      return nullvalue();
-    }
-
     return ListView.builder(
-      itemCount: filteredData.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
-        return buildCard(filteredData[index]);
+        return buildCard(data[index]);
       },
     );
   }
@@ -307,35 +272,27 @@ class _RiwayatViewState extends State<RiwayatView> {
     String token = prefs.getString('access_token') ?? '';
 
     try {
-      // Fetch data based on user ID
-      final userResponse = await http.get(
+      final response = await http.get(
         Uri.parse(
-            'https://urbanscholaria.my.id/api/surat/$userId$queryParameters'),
+            'https://urbanscholaria.my.id/api/surat$queryParameters&user_id=$userId'),
         headers: {
           "Authorization": "Bearer $token",
         },
       );
 
-      if (userResponse.statusCode == 200) {
-        Map<String, dynamic> userResponseData = json.decode(userResponse.body);
-        print('User API Response Data: $userResponseData');
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        print('Data ali. Status code: ${responseData}');
 
-        List<dynamic> userData = userResponseData['data'] ?? [];
-
-        // Sort data based on status
-        userData.sort((a, b) {
-          return a['status'].compareTo(b['status']);
-        });
-
-        return userData;
+        List<dynamic> data = responseData['data'] ?? [];
+        return data;
       } else {
-        print(
-            'Failed to fetch user data. Status code: ${userResponse.statusCode}');
-        throw Exception('Gagal memuat data user');
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+        throw Exception('Gagal memuat data');
       }
     } catch (error) {
-      print('Error fetching user data: $error');
-      throw Exception('Error mengambil data user: $error');
+      print('Error fetching data: $error');
+      throw Exception('Error mengambil data: $error');
     }
   }
 
@@ -381,23 +338,21 @@ class _RiwayatViewState extends State<RiwayatView> {
                 },
                 children: [
                   FutureBuilder(
-                    future: fetchData('?status=Verifikasi Operator',
-                        userId), // Pass the user ID
+                    future: fetchData('?status=Verifikasi Operator', userId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
+                        print("Error: ${snapshot.error}");
                         return nullvalue();
                       } else {
-                        print(snapshot.data);
+                        print("Data yang diterima: ${snapshot.data}");
                         return buildVerifikasiScreen(snapshot.data);
                       }
                     },
                   ),
-
                   FutureBuilder(
-                    future: fetchData('?status=Penjadwalan Survey',
-                        userId), // Pass the user ID
+                    future: fetchData('?status=Penjadwalan Survey', userId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -409,8 +364,7 @@ class _RiwayatViewState extends State<RiwayatView> {
                     },
                   ),
                   FutureBuilder(
-                    future: fetchData(
-                        '?status=Ditolak', userId), // Pass the user ID
+                    future: fetchData('?status=Ditolak', userId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -422,8 +376,7 @@ class _RiwayatViewState extends State<RiwayatView> {
                     },
                   ),
                   FutureBuilder(
-                    future: fetchData(
-                        '?status=Selesai', userId), // Pass the user ID
+                    future: fetchData('?status=Selesai', userId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -434,7 +387,6 @@ class _RiwayatViewState extends State<RiwayatView> {
                       }
                     },
                   ),
-                  // Tambahkan FutureBuilder lainnya untuk tab tambahan
                 ],
               ),
             ),

@@ -1,235 +1,187 @@
 import 'package:flutter/material.dart';
-import 'package:urbanscholaria_app/constant/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class OperatorDashboardView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(height: 250, child: _head()),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hai Regi!',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          '2',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Verifikasi Perizinan',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Text(
-                          'di Urban Scholaria',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(height: 24),
-                        Text(
-                          'Dashboard Perizinan',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Laporan',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            DropdownButton<String>(
-                              items: [
-                                'Semua',
-                                'Hari Ini',
-                                'Seminggu',
-                                'Sebulan',
-                                '3 Bulan',
-                                '1 Tahun',
-                                '3 Tahun'
-                              ].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                // Handle dropdown item selection
-                              },
-                              value: 'Semua',
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        buildStatCard('Pengajuan Masuk', '200', '10%',
-                            'dari bulan kemarin'),
-                        buildStatCard('Pengajuan Diterima', '150', '8%',
-                            'dari bulan kemarin'),
-                        buildStatCard('Pengajuan Ditolak', '25', '10%',
-                            'dari bulan kemarin'),
-                        buildStatCard('Pengajuan Terlambat', '5', '10%',
-                            'dari bulan kemarin'),
-                        buildStatCard(
-                            'Proses Survey', '20', '10%', 'dari bulan kemarin'),
-                        SizedBox(height: 16),
-                        Text(
-                          'Kategori Perizinan',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        buildCategoryCard('Pembangunan', '100'),
-                        buildCategoryCard('Operasional', '50'),
-                        buildCategoryCard('Perubahan Operasional', '50'),
-                        SizedBox(height: 16),
-                        Text(
-                          'Trend Pengajuan Pertahun',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        buildYearlyTrendCard('2023', '100'),
-                        buildYearlyTrendCard('2022', '50'),
-                        buildYearlyTrendCard('2021', '50'),
-                        SizedBox(height: 16),
-                        Text(
-                          'Trend Pengajuan Perkota/Kabupaten di Jawa Timur',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        buildCityTrendCard('Kota Surabaya', '40'),
-                        buildCityTrendCard('Kota Pasuruan', '25'),
-                        buildCityTrendCard('Kota Madiun', '15'),
-                        buildCityTrendCard('Kota Blitar', '10'),
-                        buildCityTrendCard('Kota Mojokerto', '10'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<List<dynamic>> fetchData(String queryParameters) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token') ?? '';
+
+    try {
+      final response = await http.get(
+        Uri.parse('https://urbanscholaria.my.id/api/surat$queryParameters'),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        print('API Response Data: $responseData');
+
+        List<dynamic> data = responseData['data'] ?? [];
+
+        // Sort data based on status
+        data.sort((a, b) {
+          return a['status'].compareTo(b['status']);
+        });
+
+        return data;
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+        throw Exception('Failed to fetch data');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+      throw Exception('Error fetching data: $error');
+    }
   }
 
-  Widget buildStatCard(
-      String title, String value, String percentage, String subtitle) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Text(
-                  percentage,
-                  style: TextStyle(fontSize: 16, color: Colors.green),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  subtitle,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+  Widget _buildStatusView({
+    required String title,
+    required String statusFilter,
+  }) {
+    return FutureBuilder(
+      future: fetchData('?status=$statusFilter'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return _buildErrorView();
+        } else {
+          List<dynamic> data = snapshot.data ?? [];
+          int totalCount = data.length;
+
+          return Container(
+            margin: EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '$totalCount',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Error',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.red, // Change color as needed
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Failed to fetch data.',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildCategoryCard(String category, String value) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              category,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text("OPERATOR DASHBOARD"),
+        centerTitle: true,
+        elevation: 0,
       ),
-    );
-  }
-
-  Widget buildYearlyTrendCard(String year, String value) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              year,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      body: ListView(
+        children: [
+          SizedBox(height: 250, child: _head()),
+          Padding(
+            padding: EdgeInsets.only(top: 32, left: 32, right: 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Dashboard Perizinan",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildCityTrendCard(String city, String value) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              city,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+          ),
+          _buildStatusView(
+            title: 'Pengajuan Masuk',
+            statusFilter: 'Pengajuan Masuk',
+          ),
+          _buildStatusView(
+            title: 'Pengajuan Diterima',
+            statusFilter: 'Pengajuan Diterima',
+          ),
+          _buildStatusView(
+            title: 'Pengajuan Ditolak',
+            statusFilter: 'Pengajuan Ditolak',
+          ),
+          _buildStatusView(
+            title: 'Pengajuan Terlambat',
+            statusFilter: 'Pengajuan Terlambat',
+          ),
+          _buildStatusView(
+            title: 'Proses Survey',
+            statusFilter: 'Proses Survey',
+          ),
+        ],
       ),
     );
   }
@@ -244,38 +196,23 @@ class OperatorDashboardView extends StatelessWidget {
               width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/images/topberanda.png"),
-                    fit: BoxFit.cover),
+                  image: AssetImage("assets/images/topberanda.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Stack(
                 children: [
-                  Positioned(
-                    top: 23,
-                    left: 300,
-                    child: GestureDetector(
-                      // onTap: () => Get.toNamed(RouteNames.notifikasi),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          color: appbrand100,
-                          child: const Icon(
-                            Icons.notifications,
-                            color: appbrand500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // ... (existing code)
+
                   Padding(
                     padding: EdgeInsets.only(top: 30, left: 36),
                     child: Text(
-                      "Hai Operator! ",
+                      "Hai Operator", // Ganti dengan sesuatu yang sesuai
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -291,13 +228,13 @@ class OperatorDashboardView extends StatelessWidget {
             width: 328,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: appbrand500,
+              color: Colors.blue, // Sesuaikan dengan warna yang diinginkan
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4),
                   blurRadius: 25,
                   spreadRadius: -5,
-                  offset: const Offset(0, 9), // mengubah posisi bayangan
+                  offset: const Offset(0, 9),
                 ),
               ],
             ),
@@ -311,11 +248,12 @@ class OperatorDashboardView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Nikmati Kemudahan\nPerizinan Sekolah",
+                          "Verifikasi Perizinan\ndi Urban Scholaria",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: appwhite),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                         const SizedBox(height: 4),
                       ],
@@ -326,8 +264,10 @@ class OperatorDashboardView extends StatelessWidget {
                     Container(
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage("assets/icons/beranda.icon.png"),
-                            fit: BoxFit.cover),
+                          image:
+                              AssetImage("assets/icons/operatordashboard.png"),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       width: 100,
                       height: 100,
