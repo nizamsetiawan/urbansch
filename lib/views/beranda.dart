@@ -20,6 +20,39 @@ class BerandaView extends StatelessWidget {
   BerandaView({Key? key}) : super(key: key);
 
   final TextEditingController searchController = TextEditingController();
+  Future<List<dynamic>> fetchData(String queryParameters) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token') ?? '';
+
+    try {
+      final response = await http.get(
+        Uri.parse('https://urbanscholaria.my.id/api/surat$queryParameters'),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        print('API Response Data: $responseData');
+
+        List<dynamic> data = responseData['data'] ?? [];
+
+        // Sort data based on status
+        data.sort((a, b) {
+          return a['status'].compareTo(b['status']);
+        });
+
+        return data;
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+        throw Exception('Failed to fetch data');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+      throw Exception('Error fetching data: $error');
+    }
+  }
 
   Future<Map<String, dynamic>> fetchUserDataById(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,6 +80,26 @@ class BerandaView extends StatelessWidget {
     }
   }
 
+  final List<String> statusFilters = [
+    'Verifikasi Operator', // Diajukan
+    'Selesai', // Diterima
+    'Ditolak', // Ditolak
+  ];
+  int getJumlahPengajuan(String status) {
+    if (status == 'Verifikasi Operator') {
+      print('Count for Diajukan: ${controller.dataDiajukan.length}');
+      return controller.dataDiajukan.length;
+    } else if (status == 'Diterima') {
+      print('Count for Diterima: ${controller.dataDiterima.length}');
+      return controller.dataDiterima.length;
+    } else if (status == 'Ditolak') {
+      print('Count for Ditolak: ${controller.dataDitolak.length}');
+      return controller.dataDitolak.length;
+    }
+
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +109,7 @@ class BerandaView extends StatelessWidget {
             SliverToBoxAdapter(
               child: SizedBox(height: 250, child: _head()),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(top: 32, left: 32, right: 32),
                 child: Column(
@@ -75,20 +128,17 @@ class BerandaView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          CardActivity(
-                            statuspengajuan: 'Diajukan',
-                            iconPath: 'assets/icons/diajukan.png',
-                            jumlahpengajuan: '1',
+                          _buildStatusView(
+                            title: 'Diajukan',
+                            statusFilter: 'Verifikasi Operator',
                           ),
-                          CardActivity(
-                            jumlahpengajuan: '1',
-                            iconPath: 'assets/icons/diterima.png',
-                            statuspengajuan: 'Diterima',
+                          _buildStatusView(
+                            title: 'Diterima',
+                            statusFilter: 'Selesai',
                           ),
-                          CardActivity(
-                            jumlahpengajuan: '1',
-                            iconPath: 'assets/icons/ditolak.png',
-                            statuspengajuan: 'Ditolak',
+                          _buildStatusView(
+                            title: 'Ditolak',
+                            statusFilter: 'Ditolak',
                           ),
                         ],
                       ),
@@ -252,6 +302,120 @@ class BerandaView extends StatelessWidget {
       ),
     );
   }
+
+  // ... (your existing code)
+
+  Widget _buildStatusView({
+    required String title,
+    required String statusFilter,
+  }) {
+    Color statusColor = Colors.black; // Default color
+
+    // Set color based on status
+    if (statusFilter == 'Verifikasi Operator') {
+      statusColor = Colors.yellow; // Yellow for 'Pengajuan Masuk'
+    } else if (statusFilter == 'Selesai') {
+      statusColor = Colors.green; // Green for 'Pengajuan Diterima'
+    } else if (statusFilter == 'Ditolak') {
+      statusColor = Colors.red; // Red for 'Pengajuan Ditolak'
+    } else if (statusFilter == 'Penjadwalan Survey') {
+      statusColor = Colors.blue; // Blue for 'Proses Survey'
+    }
+
+    return FutureBuilder(
+      future: fetchData('?status=$statusFilter'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return _buildErrorView();
+        } else {
+          List<dynamic> data = snapshot.data ?? [];
+          int totalCount = data.length;
+
+          return Container(
+            width: 70,
+            margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '$totalCount',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: statusColor, // Set color based on status
+                  ),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Error',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.red, // Change color as needed
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Failed to fetch data.',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ... (your existing code)
 
   Widget _head() {
     return Stack(

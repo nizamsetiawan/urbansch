@@ -4,6 +4,9 @@ import 'package:urbanscholaria_app/routes/routes.dart';
 
 class BerandaController extends GetxController {
   RxString selectedCategory = ''.obs;
+  RxList<dynamic> dataDiajukan = [].obs;
+  RxList<dynamic> dataDiterima = [].obs;
+  RxList<dynamic> dataDitolak = [].obs;
 
   String get getSelectedCategory => selectedCategory.value;
 

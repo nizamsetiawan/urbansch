@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import 'package:urbanscholaria_app/constant/colors.dart';
+import 'package:urbanscholaria_app/controllers/beranda_c.dart';
+import 'package:urbanscholaria_app/controllers/profile_c.dart';
+import 'package:urbanscholaria_app/routes/routes.dart';
+
 class OperatorDashboardView extends StatelessWidget {
+  final BerandaController controller = Get.put(BerandaController());
+  final EditProfileController editProfileController =
+      Get.put(EditProfileController());
+
+  final TextEditingController searchController = TextEditingController();
   Future<List<dynamic>> fetchData(String queryParameters) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
@@ -42,6 +53,19 @@ class OperatorDashboardView extends StatelessWidget {
     required String title,
     required String statusFilter,
   }) {
+    Color statusColor = Colors.black; // Default color
+
+    // Set color based on status
+    if (statusFilter == 'Verifikasi Operator') {
+      statusColor = Colors.yellow; // Yellow for 'Pengajuan Masuk'
+    } else if (statusFilter == 'Selesai') {
+      statusColor = Colors.green; // Green for 'Pengajuan Diterima'
+    } else if (statusFilter == 'Ditolak') {
+      statusColor = Colors.red; // Red for 'Pengajuan Ditolak'
+    } else if (statusFilter == 'Penjadwalan Survey') {
+      statusColor = Colors.blue; // Blue for 'Proses Survey'
+    }
+
     return FutureBuilder(
       future: fetchData('?status=$statusFilter'),
       builder: (context, snapshot) {
@@ -83,6 +107,7 @@ class OperatorDashboardView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
+                    color: statusColor, // Set color based on status
                   ),
                 ),
                 SizedBox(height: 8),
@@ -136,12 +161,6 @@ class OperatorDashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text("OPERATOR DASHBOARD"),
-        centerTitle: true,
-        elevation: 0,
-      ),
       body: ListView(
         children: [
           SizedBox(height: 250, child: _head()),
@@ -163,23 +182,19 @@ class OperatorDashboardView extends StatelessWidget {
           ),
           _buildStatusView(
             title: 'Pengajuan Masuk',
-            statusFilter: 'Pengajuan Masuk',
+            statusFilter: 'Verifikasi Operator',
           ),
           _buildStatusView(
             title: 'Pengajuan Diterima',
-            statusFilter: 'Pengajuan Diterima',
+            statusFilter: 'Selesai',
           ),
           _buildStatusView(
             title: 'Pengajuan Ditolak',
-            statusFilter: 'Pengajuan Ditolak',
-          ),
-          _buildStatusView(
-            title: 'Pengajuan Terlambat',
-            statusFilter: 'Pengajuan Terlambat',
+            statusFilter: 'Ditolak',
           ),
           _buildStatusView(
             title: 'Proses Survey',
-            statusFilter: 'Proses Survey',
+            statusFilter: 'Penjadwalan Survey',
           ),
         ],
       ),
@@ -196,18 +211,72 @@ class OperatorDashboardView extends StatelessWidget {
               width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/topberanda.png"),
-                  fit: BoxFit.cover,
-                ),
+                    image: AssetImage("assets/images/topberanda.png"),
+                    fit: BoxFit.cover),
               ),
               child: Stack(
                 children: [
-                  // ... (existing code)
-
+                  Positioned(
+                    top: 23,
+                    left: 250,
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(RouteNames.notifikasi),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          color: appbrand100,
+                          child: const Icon(
+                            Icons.notifications,
+                            color: appbrand500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 23,
+                    left: 300,
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(RouteNames.chat),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          color: appbrand100,
+                          child: const Icon(
+                            Icons.chat,
+                            color: appbrand500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 23,
+                    left: 350,
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed(RouteNames.scan),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          color: appbrand100,
+                          child: const Icon(
+                            Icons.qr_code_scanner,
+                            color: appbrand500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(top: 30, left: 36),
                     child: Text(
-                      "Hai Operator", // Ganti dengan sesuatu yang sesuai
+                      "Hai ${editProfileController.namaLengkapController.text}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -228,7 +297,7 @@ class OperatorDashboardView extends StatelessWidget {
             width: 328,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.blue, // Sesuaikan dengan warna yang diinginkan
+              color: appbrand500,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4),
@@ -248,11 +317,11 @@ class OperatorDashboardView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Verifikasi Perizinan\ndi Urban Scholaria",
+                          "Nikmati Kemudahan\nPerizinan Sekolah",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: Colors.white,
+                            color: appwhite,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -264,8 +333,7 @@ class OperatorDashboardView extends StatelessWidget {
                     Container(
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image:
-                              AssetImage("assets/icons/operatordashboard.png"),
+                          image: AssetImage("assets/icons/beranda.icon.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
