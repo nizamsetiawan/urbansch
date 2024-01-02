@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/routes/routes.dart';
+import 'package:urbanscholaria_app/views/admindinas/bottomnavbar.dart';
+import 'package:urbanscholaria_app/views/adminutama/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/operator/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/operator/dashboard.dart';
 import 'package:urbanscholaria_app/views/pemohon/ajukanperizinan.dart';
@@ -29,6 +31,7 @@ import 'package:urbanscholaria_app/views/resetpass.dart';
 import 'package:urbanscholaria_app/views/pemohon/riwayat.dart';
 import 'package:urbanscholaria_app/views/scan.dart';
 import 'package:urbanscholaria_app/views/splashscreen.dart';
+import 'package:urbanscholaria_app/views/surveyor/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/verifikasiotp.dart';
 import 'package:urbanscholaria_app/views/verifikator/bottomnavbar.dart';
 import 'package:urbanscholaria_app/views/verifikator/detailscreenverifikasi.dart';
@@ -66,7 +69,6 @@ class AppPage {
       name: RouteNames.otp,
       page: () => OtpView(),
     ),
-    //roles operator
     GetPage(
       name: RouteNames.bottomnavigationoperator,
       page: () => BottomnavigationcontrollerView(),
@@ -89,10 +91,21 @@ class AppPage {
               requestData: {},
               namaLengkap: '',
             )),
-    //roles verifikator
     GetPage(
       name: RouteNames.bottomnavigationverifikator,
       page: () => VerifikatorBottomView(),
+    ),
+    GetPage(
+      name: RouteNames.bottomnavigationsurveyor,
+      page: () => SurveyorBottomView(),
+    ),
+    GetPage(
+      name: RouteNames.bottomnavigationadmindinas,
+      page: () => AdminDInasBottomView(),
+    ),
+    GetPage(
+      name: RouteNames.bottomnavigationadminutama,
+      page: () => AdminUtamaBottomView(),
     ),
     GetPage(
       name: RouteNames.verifikatorverifikasi,

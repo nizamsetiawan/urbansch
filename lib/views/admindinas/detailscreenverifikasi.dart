@@ -10,13 +10,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/base_api.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
+import 'package:urbanscholaria_app/views/verifikator/penugasansurvey.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 
-class DetailScreenVerifikasiView extends StatelessWidget {
+class DetailVerifikasiAdminDInasView extends StatelessWidget {
   final Map<String, dynamic> requestData;
   final String namaLengkap;
 
-  DetailScreenVerifikasiView(
+  DetailVerifikasiAdminDInasView(
       {required this.requestData, required this.namaLengkap});
 
   // Updated method with explicit cast
@@ -40,19 +41,24 @@ class DetailScreenVerifikasiView extends StatelessWidget {
       btnOkText: 'Ya',
       btnOkOnPress: () async {
         // Call the method to proceed to the verifier
-        lanjutKeVerifikator(suratId);
+        BuatTugasSurvey(suratId);
 
         // Show Snackbar upon success
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('Pengajuan permohonan telah diteruskan ke verifikator.'),
+                Text('Pengajuan permohonan telah diteruskan ke Kepala Dinas.'),
             backgroundColor: appdone500,
           ),
         );
 
-        // Navigate back to the detail screen
-        Navigator.of(context).pop();
+        // Navigate back to the penjadwalan survey
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PenugasanSurveyView(requestData: requestData),
+          ),
+        );
       },
     )..show();
   }
@@ -103,7 +109,7 @@ class DetailScreenVerifikasiView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbrand500,
-        title: const Text("RINCIAN PERIZINAN"),
+        title: const Text("KELENGKAPAN"),
         centerTitle: true,
         elevation: 0,
       ),
@@ -269,7 +275,7 @@ class DetailScreenVerifikasiView extends StatelessWidget {
                 _showVerificationConfirmationDialog(context, suratId);
               },
               child: ButtonWidgets(
-                label: 'Lanjut Ke Verifikator',
+                label: 'Buat Tugas Survey',
               ),
             ),
           ],
@@ -399,7 +405,7 @@ class DetailScreenVerifikasiView extends StatelessWidget {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
 
-    final apiUrl = '${BASE_API}api/surat/$suratId/tolak-operator-baru';
+    final apiUrl = '${BASE_API}api/surat/$suratId/tolak-verifikator-baru';
 
     try {
       final response = await http.patch(
@@ -434,11 +440,11 @@ class DetailScreenVerifikasiView extends StatelessWidget {
     }
   }
 
-  void lanjutKeVerifikator(int suratId) async {
+  void BuatTugasSurvey(int suratId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
 
-    final apiUrl = '${BASE_API}api/surat/$suratId/terima-operator';
+    final apiUrl = '${BASE_API}api/surat/$suratId/terima-verifikator';
 
     try {
       final response = await http.patch(

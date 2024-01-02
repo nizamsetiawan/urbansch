@@ -5,14 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/views/verifikator/detailscreenverifikasi.dart';
 
-class VerifikatorVerifikasiView extends StatefulWidget {
-  const VerifikatorVerifikasiView({Key? key}) : super(key: key);
+class AdminDInasVerifikasiView extends StatefulWidget {
+  const AdminDInasVerifikasiView({Key? key}) : super(key: key);
 
   @override
-  State<VerifikatorVerifikasiView> createState() => _VerifikasiViewState();
+  State<AdminDInasVerifikasiView> createState() => _VerifikasiViewState();
 }
 
-class _VerifikasiViewState extends State<VerifikatorVerifikasiView> {
+class _VerifikasiViewState extends State<AdminDInasVerifikasiView> {
   List<Map<String, dynamic>> perizinanData = [];
   TextEditingController searchController = TextEditingController();
 
@@ -27,7 +27,8 @@ class _VerifikasiViewState extends State<VerifikatorVerifikasiView> {
     String token = prefs.getString('access_token') ?? '';
 
     try {
-      final String queryParameters = '?status=Verifikasi%20Verifikator';
+      final String queryParameters =
+          '?status=Verifikasi%20Verifikasi Hasil Survey';
 
       final Uri uri =
           Uri.parse('https://urbanscholaria.my.id/api/surat$queryParameters');
@@ -75,7 +76,7 @@ class _VerifikasiViewState extends State<VerifikatorVerifikasiView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbrand500,
-        title: const Text("VERIFIKASI"),
+        title: const Text("TUGAS SURVEY"),
         centerTitle: true,
         elevation: 0,
       ),
@@ -209,8 +210,8 @@ class _VerifikasiViewState extends State<VerifikatorVerifikasiView> {
 Widget _buildStatusText(String status) {
   Color statusColor = Colors.black; // Default color
 
-  if (status == 'Verifikasi Verifikator') {
-    status = 'Perlu Verifikasi';
+  if (status == 'Verifikasi Hasil Survey') {
+    status = 'Perlu Survey';
     statusColor = appwarn600;
   }
 

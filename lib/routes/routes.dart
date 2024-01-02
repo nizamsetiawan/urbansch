@@ -13,11 +13,14 @@ abstract class RouteNames {
   static const operatorperizinan = '/operatorperizinan';
   static const operatorverifikasi = '/operatorverifikasi';
   static const detailscreenverifikasi = '/detailscreenverifikasi';
-  //verifikator
   static const bottomnavigationverifikator = '/bottomnavigationverifikator';
+  static const bottomnavigationsurveyor = '/bottomnavigationsurveyor';
+  static const bottomnavigationadmindinas = '/bottomnavigationadmindinas';
+  static const bottomnavigationadminutama = '/bottomnavigationadminutama';
   static const verifikatorverifikasi = '/verifikatorverifikasi';
   static const detailverifiaktorverifikasi = '/detailverifikatorverifikasi';
   static const penugasansurvey = '/penugasansurvey';
+  static const aktivasiakun = "/aktivasiakun";
 
   //bottom
   static const bottomnavigation = "/bottomnavigation";

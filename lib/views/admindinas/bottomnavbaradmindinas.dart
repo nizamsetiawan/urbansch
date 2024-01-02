@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/rolesnav/bottomnavbar_c.dart';
 
-class BottomnavigationcontrollerView extends StatelessWidget {
-  final controller = Get.put(OperatorBottomnavigationController());
+class AdminDinasBottomView extends StatelessWidget {
+  final controller = Get.put(AdminDinasBottomnavigationController());
 
   // Judul untuk setiap item di bottom navigation
   final List<String> judul = [

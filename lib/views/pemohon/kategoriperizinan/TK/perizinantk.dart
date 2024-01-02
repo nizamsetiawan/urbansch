@@ -26,7 +26,6 @@ class TKPerizinanView extends StatelessWidget {
   }
 
   Future<String> getCategory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     // Mengambil kategori dari BerandaController
     BerandaController berandaController = Get.find();
     return berandaController.getSelectedCategory;

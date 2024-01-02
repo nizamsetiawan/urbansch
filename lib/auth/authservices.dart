@@ -84,13 +84,13 @@ class AuthService extends GetxService {
         dashboardRoute = RouteNames.bottomnavigationverifikator;
         break;
       case 'Surveyor':
-        dashboardRoute = RouteNames.bottomnavigationoperator;
+        dashboardRoute = RouteNames.bottomnavigationsurveyor;
         break;
       case 'AdminUtama':
-        dashboardRoute = RouteNames.bottomnavigationoperator;
+        dashboardRoute = RouteNames.bottomnavigationadminutama;
         break;
       case 'AdminDinas':
-        dashboardRoute = RouteNames.bottomnavigationoperator;
+        dashboardRoute = RouteNames.bottomnavigationadmindinas;
         break;
       default:
         // Handle unknown role

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http; // Import the http package
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
@@ -36,7 +35,7 @@ class DetailVerifikasiVerifikatorView extends StatelessWidget {
       headerAnimationLoop: false,
       animType: AnimType.TOPSLIDE,
       title: 'Konfirmasi Verifikasi',
-      desc: 'Anda yakin ingin meneruskan pengajuan ke verifikator?',
+      desc: 'Anda yakin ingin meneruskan pengajuan ke surveyor?',
       btnCancelText: 'Batal',
       btnCancelOnPress: () {},
       btnOkText: 'Ya',
@@ -47,8 +46,7 @@ class DetailVerifikasiVerifikatorView extends StatelessWidget {
         // Show Snackbar upon success
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Pengajuan permohonan telah diteruskan ke verifikator.'),
+            content: Text('Pengajuan permohonan telah diteruskan ke surveyor.'),
             backgroundColor: appdone500,
           ),
         );

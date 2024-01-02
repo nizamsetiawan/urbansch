@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/views/pemohon/detailriwayatperizinan.dart';
 import 'package:urbanscholaria_app/widgets/null.dart';
 import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:open_file/open_file.dart';
 

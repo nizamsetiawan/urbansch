@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
-import 'package:urbanscholaria_app/controllers/bottomnavbar_c.dart';
-import 'package:urbanscholaria_app/controllers/operator/bottomnavbar_c.dart';
+import 'package:urbanscholaria_app/controllers/rolesnav/bottomnavbar_c.dart';
 
 class VerifikatorBottomView extends StatelessWidget {
   final controller = Get.put(VerifikatorBottomnavigationController());

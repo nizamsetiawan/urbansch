@@ -12,7 +12,7 @@ class ScanView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbrand500,
-        title: Text("INFORMASI PERIZINAN"),
+        title: Text("SCAN"),
         centerTitle: true,
         elevation: 0,
       ),

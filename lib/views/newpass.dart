@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
 import 'package:urbanscholaria_app/controllers/newpass_c.dart';
-import 'package:urbanscholaria_app/routes/routes.dart';
 import 'package:urbanscholaria_app/widgets/button.dart';
 
 class NewpassView extends StatelessWidget {
