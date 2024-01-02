@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:urbanscholaria_app/views/beranda.dart';
+import 'package:urbanscholaria_app/views/pemohon/beranda.dart';
 import 'package:urbanscholaria_app/views/chat.dart';
 import 'package:urbanscholaria_app/views/profile.dart';
-import 'package:urbanscholaria_app/views/riwayat.dart';
+import 'package:urbanscholaria_app/views/pemohon/riwayat.dart';
 import 'package:urbanscholaria_app/views/scan.dart';
 
 class BottomnavigationController extends GetxController {

@@ -6,7 +6,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbanscholaria_app/constant/colors.dart';
-import 'package:urbanscholaria_app/views/detailriwayatperizinan.dart';
+import 'package:urbanscholaria_app/views/pemohon/detailriwayatperizinan.dart';
 import 'package:http/http.dart' as http;
 
 class UserCard extends StatelessWidget {
