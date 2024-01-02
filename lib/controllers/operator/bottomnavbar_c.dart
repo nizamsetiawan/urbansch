@@ -8,6 +8,7 @@ import 'package:urbanscholaria_app/views/operator/verifikasi.dart';
 import 'package:urbanscholaria_app/views/profile.dart';
 import 'package:urbanscholaria_app/views/pemohon/riwayat.dart';
 import 'package:urbanscholaria_app/views/scan.dart';
+import 'package:urbanscholaria_app/views/verifikator/verifikasi.dart';
 
 class OperatorBottomnavigationController extends GetxController {
   RxInt CurrentIndex = 0.obs;
@@ -16,6 +17,24 @@ class OperatorBottomnavigationController extends GetxController {
     OperatorDashboardView(),
     OperatorPerizinanView(),
     OperatorVerifikasiView(),
+    OperatorFeedbackView(),
+    ProfileView(),
+  ];
+
+  SetIndex(index) {
+    print(index);
+    CurrentIndex.value = index;
+    update();
+  }
+}
+
+class VerifikatorBottomnavigationController extends GetxController {
+  RxInt CurrentIndex = 0.obs;
+
+  final screens = [
+    OperatorDashboardView(),
+    OperatorPerizinanView(),
+    VerifikatorVerifikasiView(),
     OperatorFeedbackView(),
     ProfileView(),
   ];

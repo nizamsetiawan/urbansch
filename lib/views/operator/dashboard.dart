@@ -57,7 +57,7 @@ class OperatorDashboardView extends StatelessWidget {
     Color statusColor = Colors.black; // Default color
 
     // Set color based on status
-    if (statusFilter == 'Verifikasi Operator') {
+    if (statusFilter == '') {
       statusColor = Colors.yellow; // Yellow for 'Pengajuan Masuk'
     } else if (statusFilter == 'Selesai') {
       statusColor = Colors.green; // Green for 'Pengajuan Diterima'
@@ -307,7 +307,7 @@ class OperatorDashboardView extends StatelessWidget {
           ),
           _buildStatusView(
             title: 'Pengajuan Masuk',
-            statusFilter: 'Verifikasi Operator',
+            statusFilter: '',
           ),
           _buildStatusView(
             title: 'Pengajuan Diterima',

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:urbanscholaria_app/views/detailriwayatperizinan.dart';
+import 'package:urbanscholaria_app/views/pemohon/detailriwayatperizinan.dart';
 import 'package:urbanscholaria_app/widgets/null.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';

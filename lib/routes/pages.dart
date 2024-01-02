@@ -30,6 +30,10 @@ import 'package:urbanscholaria_app/views/pemohon/riwayat.dart';
 import 'package:urbanscholaria_app/views/scan.dart';
 import 'package:urbanscholaria_app/views/splashscreen.dart';
 import 'package:urbanscholaria_app/views/verifikasiotp.dart';
+import 'package:urbanscholaria_app/views/verifikator/bottomnavbar.dart';
+import 'package:urbanscholaria_app/views/verifikator/detailscreenverifikasi.dart';
+import 'package:urbanscholaria_app/views/verifikator/penugasansurvey.dart';
+import 'package:urbanscholaria_app/views/verifikator/verifikasi.dart';
 
 class AppPage {
   static final pages = [
@@ -85,6 +89,28 @@ class AppPage {
               requestData: {},
               namaLengkap: '',
             )),
+    //roles verifikator
+    GetPage(
+      name: RouteNames.bottomnavigationverifikator,
+      page: () => VerifikatorBottomView(),
+    ),
+    GetPage(
+      name: RouteNames.verifikatorverifikasi,
+      page: () => VerifikatorVerifikasiView(),
+    ),
+    GetPage(
+      name: RouteNames.detailverifiaktorverifikasi,
+      page: () => DetailVerifikasiVerifikatorView(
+        requestData: {},
+        namaLengkap: '',
+      ),
+    ),
+    GetPage(
+      name: RouteNames.penugasansurvey,
+      page: () => PenugasanSurveyView(
+        requestData: {},
+      ),
+    ),
     //bottom
     GetPage(
       name: RouteNames.bottomnavigation,

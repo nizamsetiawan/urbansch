@@ -74,9 +74,29 @@ class AuthService extends GetxService {
     String userRole = getUserRole();
 
     // Tentukan rute dashboard berdasarkan peran
-    String dashboardRoute = (userRole == 'Operator')
-        ? RouteNames.bottomnavigationoperator
-        : RouteNames.bottomnavigation;
+    String dashboardRoute;
+
+    switch (userRole) {
+      case 'Operator':
+        dashboardRoute = RouteNames.bottomnavigationoperator;
+        break;
+      case 'Verifikator':
+        dashboardRoute = RouteNames.bottomnavigationverifikator;
+        break;
+      case 'Surveyor':
+        dashboardRoute = RouteNames.bottomnavigationoperator;
+        break;
+      case 'AdminUtama':
+        dashboardRoute = RouteNames.bottomnavigationoperator;
+        break;
+      case 'AdminDinas':
+        dashboardRoute = RouteNames.bottomnavigationoperator;
+        break;
+      default:
+        // Handle unknown role
+        dashboardRoute = RouteNames.bottomnavigation;
+        break;
+    }
 
     // Navigasi ke dashboard yang sesuai
     Get.offNamed(dashboardRoute);
