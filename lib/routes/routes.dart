@@ -11,6 +11,8 @@ abstract class RouteNames {
   static const operatordashboard = '/operatordashboard';
   static const bottomnavigationoperator = '/bottomnavigationoperator';
   static const operatorperizinan = '/operatorperizinan';
+  static const operatorverifikasi = '/operatorverifikasi';
+  static const detailscreenverifikasi = '/detailscreenverifikasi';
   //bottom
   static const bottomnavigation = "/bottomnavigation";
   static const beranda = "/beranda";

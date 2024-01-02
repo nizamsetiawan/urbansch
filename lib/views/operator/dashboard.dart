@@ -15,6 +15,7 @@ class OperatorDashboardView extends StatelessWidget {
       Get.put(EditProfileController());
 
   final TextEditingController searchController = TextEditingController();
+
   Future<List<dynamic>> fetchData(String queryParameters) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token') ?? '';
@@ -158,6 +159,130 @@ class OperatorDashboardView extends StatelessWidget {
     );
   }
 
+  Widget _buildKategoriPerizinanView() {
+    return FutureBuilder(
+      future: fetchData(''),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return _buildErrorView();
+        } else {
+          List<dynamic> data = snapshot.data ?? [];
+
+          // Group data by 'kategori'
+          Map<String, List<dynamic>> groupedData = {};
+          for (var item in data) {
+            String kategori = item['kategori'] as String;
+            if (!groupedData.containsKey(kategori)) {
+              groupedData[kategori] = [];
+            }
+            groupedData[kategori]!.add(item);
+          }
+
+          return Container(
+            margin: EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Kategori Perizinan',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                // Build a ListTile for each kategori
+                for (var entry in groupedData.entries)
+                  ListTile(
+                    title: Text(entry.key),
+                    subtitle: Text(
+                      '${entry.value.length}',
+                    ),
+                  ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildJenisPerizinanView() {
+    return FutureBuilder(
+      future: fetchData(''),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return _buildErrorView();
+        } else {
+          List<dynamic> data = snapshot.data ?? [];
+
+          // Group data by 'surat_jenis'
+          Map<String, List<dynamic>> groupedData = {};
+          for (var item in data) {
+            String jenisPerizinan = item['surat_jenis']['nama'] as String;
+            if (!groupedData.containsKey(jenisPerizinan)) {
+              groupedData[jenisPerizinan] = [];
+            }
+            groupedData[jenisPerizinan]!.add(item);
+          }
+
+          return Container(
+            margin: EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Jenis Perizinan',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                // Build a ListTile for each jenis perizinan
+                for (var entry in groupedData.entries)
+                  ListTile(
+                    title: Text(entry.key),
+                    subtitle: Text(
+                      '${entry.value.length}',
+                    ),
+                  ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,6 +321,8 @@ class OperatorDashboardView extends StatelessWidget {
             title: 'Proses Survey',
             statusFilter: 'Penjadwalan Survey',
           ),
+          _buildKategoriPerizinanView(), // Ganti kategori sesuai kebutuhan Anda
+          _buildJenisPerizinanView()
         ],
       ),
     );

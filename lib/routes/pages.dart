@@ -17,7 +17,9 @@ import 'package:urbanscholaria_app/views/login.dart';
 import 'package:urbanscholaria_app/views/newpass.dart';
 import 'package:urbanscholaria_app/views/notifikasi.dart';
 import 'package:urbanscholaria_app/views/onboarding.dart';
+import 'package:urbanscholaria_app/views/operator/detailscreenverifikasi.dart';
 import 'package:urbanscholaria_app/views/operator/perizinan.view.dart';
+import 'package:urbanscholaria_app/views/operator/verifikasi.dart';
 import 'package:urbanscholaria_app/views/profile.dart';
 import 'package:urbanscholaria_app/views/profile/about_view.dart';
 import 'package:urbanscholaria_app/views/profile/editprofile.dart';
@@ -73,6 +75,16 @@ class AppPage {
       name: RouteNames.operatorperizinan,
       page: () => OperatorPerizinanView(),
     ),
+    GetPage(
+      name: RouteNames.operatorverifikasi,
+      page: () => OperatorVerifikasiView(),
+    ),
+    GetPage(
+        name: RouteNames.detailscreenverifikasi,
+        page: () => DetailScreenVerifikasiView(
+              requestData: {},
+              namaLengkap: '',
+            )),
     //bottom
     GetPage(
       name: RouteNames.bottomnavigation,
